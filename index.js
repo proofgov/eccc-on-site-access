@@ -42,7 +42,7 @@ app.get("/", (req, res) =>
 
 // building name, floor, request date and request time as parameters.
 //Have it return "blocked" if the request is noon or Tuesday, otherwise it says accept.
-app.get("/available", (request, response) => {
+app.get("/is-time-available", (request, response) => {
   console.log("request", request.query);
   const {
     building,
@@ -62,18 +62,19 @@ app.get("/available", (request, response) => {
   console.log("time", time);
   console.log("accessRequestedFor", accessRequestedFor);
 
+  response.type("application/json");
   if (
     accessRequestedFor.getDay() === DAYS.TUESDAY ||
     accessRequestedFor.getHours() === HOURS.NOON ||
     floor === 13
   ) {
     response.status(200);
-    response.send("blocked");
+    response.send({ isAllowed: false });
     return;
   }
 
   response.status(200);
-  response.send("allowed");
+  response.send({ isAllowed: true });
 });
 
 app.listen(listenPort, () =>
