@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+move_to_base() {
+    script_dir=$1
+    pushd ${script_dir}/.. > /dev/null
+}
+
+return_from_base () {
+    popd > /dev/null
+}
+
+main () {
+    SCRIPT_DIR=$(dirname $0)
+
+    move_to_base $SCRIPT_DIR
+    docker-compose -f docker-compose.development.yml "$@"
+    return_from_base
+}
+
+main "$@"

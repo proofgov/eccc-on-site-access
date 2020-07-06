@@ -17,4 +17,4 @@ COPY . .
 
 EXPOSE 4000
 
-CMD [ "yarn", "server" ]
+CMD ["yarn", "server"]
