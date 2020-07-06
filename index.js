@@ -63,7 +63,7 @@ app.get("/available", (request, response) => {
   console.log("accessRequestedFor", accessRequestedFor);
 
   if (
-    accessRequestedFor.getDay() === DAYS.TUEDAY ||
+    accessRequestedFor.getDay() === DAYS.TUESDAY ||
     accessRequestedFor.getHours() === HOURS.NOON ||
     floor === 13
   ) {
