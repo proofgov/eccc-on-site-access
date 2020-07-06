@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 # where available (npm@5+)
 COPY package*.json yarn.lock ./
 
-RUN yarn install
+RUN yarn install --force
 # If you are building your code for production
 # RUN npm ci --only=production
 
