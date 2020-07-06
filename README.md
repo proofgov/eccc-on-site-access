@@ -1,8 +1,13 @@
-# eccc-office-rate-limiting
-ECCC Office Request Rate-Limiting
+# ECCC Office Request Rate-Limiting
 
-**Old**
-## Example Form Query API
+## Development
+1. Build the app `docker-compose build`
+2. Boot the app `docker-compose up -d`
+3. Watch the locks with `docker-compose logs -f`
+4. Restart the app (to get new code changes) `docker-compose restart`
+
+
+## **Old** Example Form Query API
 
 To start using the example application, follow the steps:
 
