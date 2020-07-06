@@ -7,3 +7,7 @@ services:
       - "4000:4000"
     volumes:
       - .:/usr/src/app
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:eccc-on-site-access.proofgov.com"
+      - "traefik.port=4000"
