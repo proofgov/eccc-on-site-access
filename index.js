@@ -118,16 +118,18 @@ app.get("/is-time-available", (request, response) => {
   console.log("accessRequestedFor", accessRequestedFor);
 
   let data = {
-    isAvailable: false,
+    isAvailable: true,
+    nextAvailableTimeSlot: null,
     info:
       "Access is denied if date is a Tuesday (e.g. 2020/07/07), time=5 or floor=13.",
   };
   if (
-    accessRequestedFor.getDay() !== DAYS.TUESDAY &&
-    accessRequestedFor.getHours() !== HOURS.NOON &&
-    floor !== 13
+    accessRequestedFor.getDay() === DAYS.TUESDAY ||
+    accessRequestedFor.getHours() === HOURS.NOON ||
+    floor === 13
   ) {
-    data.isAvailable = true;
+    data.isAvailable = false;
+    data.nextAvailableTimeSlot = "2020/07/12 at 4 pm";
   }
 
   console.log(
