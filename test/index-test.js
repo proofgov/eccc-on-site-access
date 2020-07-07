@@ -1,38 +1,30 @@
-var request = require("request");
+const axios = require("axios");
 
 describe("index.js", () => {
   describe("#app", () => {
     context("when querying the /is-time-available api", () => {
       context("when no args passed", () => {
-        it("return that the time is available", (done) => {
-          request(
-            "http://localhost:4000/is-time-available",
-            (error, response, body) => {
-              result = JSON.parse(body);
-              expect(result).to.include({ isAvailable: true });
-              done();
-            }
-          );
+        it("return that the time is available", () => {
+          return axios
+            .get("http://localhost:4000/is-time-available")
+            .then((response) =>
+              expect(response.data).to.include({ isAvailable: true })
+            );
         });
 
-        it("always returns success", (done) => {
-          request(
-            "http://localhost:4000/is-time-available",
-            (error, response, body) => {
-              expect(response.statusCode).to.eq(200);
-              done();
-            }
-          );
+        it("always returns success", () => {
+          return axios
+            .get("http://localhost:4000/is-time-available")
+            .then((response) => expect(response.status).to.eq(200));
         });
       });
     });
 
     context("when hitting app root", () => {
-      it("finds the welcome page", (done) => {
-        request("http://localhost:4000", (error, response, body) => {
-          expect(body).to.include("Welcome");
-          done();
-        });
+      it("finds the welcome page", () => {
+        return axios
+          .get("http://localhost:4000")
+          .then((response) => expect(response.data).to.include("Welcome"));
       });
     });
   });
