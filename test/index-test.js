@@ -15,7 +15,7 @@ describe("index.js", () => {
           );
         });
 
-        it("return always returns success", (done) => {
+        it("always returns success", (done) => {
           request(
             "http://localhost:4000/is-time-available",
             (error, response, body) => {
