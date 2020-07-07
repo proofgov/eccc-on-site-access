@@ -40,7 +40,7 @@ const HOURS = Object.freeze({
 app.get("/", (req, res) =>
   res.send(
     "<h1>Welcome to PROOF's ECCC On Site Access API</h1>" +
-      '<p>To read more on how to use this example app, visit <a href="https://github.com/proofgov/example-form-query-api">Proof\'s github form query api example page.</a>'
+      '<p>To read how to make an app like this, visit <a href="https://github.com/proofgov/example-form-query-api">Proof\'s github form query api example page.</a>'
   )
 );
 
