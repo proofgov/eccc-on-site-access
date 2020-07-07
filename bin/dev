@@ -9,11 +9,41 @@ return_from_base () {
     popd > /dev/null
 }
 
+dc_cmd () {
+   docker-compose -f docker-compose.development.yml "$@"
+}
+
+test () {
+   dc_cmd exec app yarn test "$@"
+}
+
 main () {
+    if [[ -z "$1" || "$1" == "-h" || "$1" == "--help" ]]; then
+       echo "
+dev
+  -h --help             List possible command usages.
+
+  Local Commands
+  test                  Boot the test service.
+  [some local command]  Run that command
+
+  Docker Compose Commands
+  logs -f               Ouput \`docker-compose -f docker-compose.development.yml logs -f\`
+                        Any non-local command will pipe to docker-compose
+"
+    exit 0
+    fi
+
     SCRIPT_DIR=$(dirname $0)
 
     move_to_base $SCRIPT_DIR
-    docker-compose -f docker-compose.development.yml "$@"
+
+    if [[ $(type -t "$1") == 'function' ]]; then
+        eval "$@"
+        exit 0
+    fi
+
+    dc_cmd "$@"
     return_from_base
 }
 
