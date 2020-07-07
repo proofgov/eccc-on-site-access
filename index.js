@@ -61,30 +61,26 @@ app.get("/is-time-available", (request, response) => {
     time: queryTime,
   } = request.query;
   const floor = Number(queryFloor);
-  const date = new Date(queryDate);
-  const time = new Date(`${queryDate} ${HOURS[queryTime]}`);
 
   const accessRequestedFor = new Date(`${queryDate} ${HOURS[queryTime]}`);
 
   console.log("building", building);
   console.log("floor", floor);
-  console.log("date", date);
-  console.log("time", time);
   console.log("accessRequestedFor", accessRequestedFor);
 
-  response.type("application/json");
+  let data = { isAllowed: false };
   if (
-    accessRequestedFor.getDay() === DAYS.TUESDAY ||
-    accessRequestedFor.getHours() === HOURS.NOON ||
-    floor === 13
+    accessRequestedFor.getDay() !== DAYS.TUESDAY ||
+    accessRequestedFor.getHours() !== HOURS.NOON ||
+    floor !== 13
   ) {
-    response.status(200);
-    response.send({ isAllowed: false });
-    return;
+    data = { isAllowed: true };
   }
 
+  console.log("response", JSON.stringify(data, null, 2));
+  response.type("application/json");
   response.status(200);
-  response.send({ isAllowed: true });
+  response.send(data);
 });
 
 app.listen(listenPort, () =>
