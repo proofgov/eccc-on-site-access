@@ -26,6 +26,15 @@ const DAYS = Object.freeze({
 });
 
 const HOURS = Object.freeze({
+  "1": "8:00 am",
+  "2": "9:00 am",
+  "3": "10:00 am",
+  "4": "11:00 am",
+  "5": "12:00 pm",
+  "6": "1:00 pm",
+  "7": "2:00 pm",
+  "8": "3:00 pm",
+  "9": "4:00 pm",
   NOON: 12,
 });
 
@@ -43,6 +52,7 @@ app.get("/", (req, res) =>
 // building name, floor, request date and request time as parameters.
 //Have it return "blocked" if the request is noon or Tuesday, otherwise it says accept.
 app.get("/is-time-available", (request, response) => {
+  console.log("request.url", request.url);
   console.log("request", request.query);
   const {
     building,
@@ -52,9 +62,9 @@ app.get("/is-time-available", (request, response) => {
   } = request.query;
   const floor = Number(queryFloor);
   const date = new Date(queryDate);
-  const time = new Date(`${queryDate} ${queryTime}`);
+  const time = new Date(`${queryDate} ${HOURS[queryTime]}`);
 
-  const accessRequestedFor = new Date(`${queryDate} ${queryTime}`);
+  const accessRequestedFor = new Date(`${queryDate} ${HOURS[queryTime]}`);
 
   console.log("building", building);
   console.log("floor", floor);
