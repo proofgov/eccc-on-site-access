@@ -1,0 +1,22 @@
+{
+  "alignTernaryLines": false,
+  "arrowParens": "avoid",
+  "bracketSpacing": true,
+  "endOfLine": "lf",
+  "generatorStarSpacing": true,
+  "overrides": [
+    {
+      "files": "*.json",
+      "options": null,
+      "singleQuote": false
+    }
+  ],
+  "printWidth": 92,
+  "quoteProps": "consistent",
+  "semi": false,
+  "singleQuote": true,
+  "spaceBeforeFunctionParen": true,
+  "tabWidth": 2,
+  "trailingComma": "es5",
+  "yieldStarSpacing": true
+}
