@@ -68,16 +68,31 @@ app.get("/is-time-available", (request, response) => {
   console.log("floor", floor);
   console.log("accessRequestedFor", accessRequestedFor);
 
-  let data = { isAllowed: false };
+  let data = {
+    isAvailable: false,
+    info:
+      "Access is denied if date is a Tuesday (e.g. 2020/07/07), time=5 or floor=13.",
+  };
   if (
-    accessRequestedFor.getDay() !== DAYS.TUESDAY ||
-    accessRequestedFor.getHours() !== HOURS.NOON ||
+    accessRequestedFor.getDay() !== DAYS.TUESDAY &&
+    accessRequestedFor.getHours() !== HOURS.NOON &&
     floor !== 13
   ) {
-    data = { isAllowed: true };
+    data.isAvailable = true;
   }
 
-  console.log("response", JSON.stringify(data, null, 2));
+  console.log(
+    "response:",
+    JSON.stringify(
+      {
+        status: 200,
+        type: "application/json",
+        data: data,
+      },
+      null,
+      2
+    )
+  );
   response.type("application/json");
   response.status(200);
   response.send(data);
