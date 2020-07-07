@@ -1,12 +1,13 @@
 {
-  "name": "example-form-query-api",
+  "name": "ecc-on-site-access-api",
   "version": "0.0.1",
-  "description": "Example Node App for Proof Form Query API",
+  "description": "PROOF's ECCC On Site Access API",
   "main": "index.js",
   "scripts": {
     "setup-form": "bin/setup-form",
     "generate-submission": "bin/generate-submission",
-    "server": "node index.js"
+    "server": "node index.js",
+    "test": "mocha --watch --require test/test-setup.js"
   },
   "repository": "git@github.com:proofgov/example-form-query-api.git",
   "author": "Andrew Kalek <akalek@proofgov.com>",
@@ -18,5 +19,10 @@
     "express-basic-auth": "^1.2.0",
     "faker": "^4.1.0",
     "js-yaml": "^3.14.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^8.0.1",
+    "request": "^2.88.2"
   }
 }
