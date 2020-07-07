@@ -59,6 +59,7 @@ app.get("/available-time-slots", (request, response) => {
   console.log("floor", floor);
   console.log("accessRequestedFor", accessRequestedFor);
 
+  const timeSlotDefaults = loadTimeSlotsDefaults();
   let data = {
     availableTimeSlots: timeSlotDefaults,
     info:
@@ -68,15 +69,15 @@ app.get("/available-time-slots", (request, response) => {
   };
 
   const DUMMY_DATE = "2020/07/06";
-  if (accessRequestedFor.getDay() !== DAYS.TUESDAY) {
-    data.availableTimeSlots = timeSlotDefaults.filter(
-      (label, value) => new Date(`${DUMMY_DATE} ${value}`).getHours() > 12
-    );
+  if (accessRequestedFor.getDay() === DAYS.TUESDAY) {
+    data.availableTimeSlots = timeSlotDefaults.filter((row) => {
+      return new Date(`${DUMMY_DATE} ${row.value}`).getHours() <= 12;
+    });
   }
 
   if (floor === 13) {
     data.availableTimeSlots = timeSlotDefaults.filter(
-      (label, value) => new Date(`${DUMMY_DATE} ${value}`).getHours() !== 9
+      (row) => new Date(`${DUMMY_DATE} ${row.value}`).getHours() !== 9
     );
   }
 
