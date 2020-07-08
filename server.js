@@ -9,7 +9,9 @@ const routes = require(APP_ROOT + '/routes/index')
 
 const app = express()
 
-const { protocol, hostname, port } = url.parse(APP_URL || 'http://localhost:4000')
+const { protocol, hostname, port } = url.parse(
+  process.env.APP_URL || 'http://localhost:4000'
+)
 
 app.use('/', routes)
 
