@@ -1,7 +1,5 @@
 const axios = require('axios')
 
-const app = require(APP_ROOT + '/server')
-
 describe('routes/index (app root page)', () => {
   describe('GET /', () => {
     context('when hitting app root', () => {

@@ -1,4 +1,3 @@
-const app = require(APP_ROOT + '/server')
 const proofApi = require(APP_ROOT + '/lib/proof-api')
 
 describe('isAvailable', () => {

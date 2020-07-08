@@ -15,7 +15,9 @@ const { protocol, hostname, port } = url.parse(
 
 app.use('/', routes)
 
-app.listen(port, () => console.log(`Server started at ${protocol}//${hostname}:${port}`))
+if (!module.parent) {
+  app.listen(port, () => console.log(`Server started at ${protocol}//${hostname}:${port}`))
+}
 
 // Export our app for testing purposes
 module.exports = app

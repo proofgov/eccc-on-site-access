@@ -23,6 +23,9 @@ global.originalConsoleInfo = console.info
 global.originalConsoleWarn = console.warn
 global.originalConsoleError = console.error
 
+// only include app once
+global.app = require(APP_ROOT + '/server')
+
 afterEach(() => {
   // Ensure testdouble is reset after each test
   td.reset()
