@@ -14,7 +14,7 @@ dc_cmd () {
 }
 
 test () {
-   dc_cmd exec app yarn test "$@"
+   dc_cmd run --rm test yarn test "$@"
 }
 
 main () {

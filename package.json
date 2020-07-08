@@ -7,10 +7,10 @@
     "setup-form": "bin/setup-form",
     "generate-submission": "bin/generate-submission",
     "server": "node index.js",
-    "test": "mocha --watch --require test/test-setup.js"
+    "test": "mocha --watch --require test/test-setup.js 'test/**/*-test.js'"
   },
   "repository": "git@github.com:proofgov/example-form-query-api.git",
-  "author": "Andrew Kalek <akalek@proofgov.com>",
+  "author": "Marlen Brunner <mbrunner@proofgov.com>",
   "license": "MIT",
   "private": true,
   "dependencies": {
