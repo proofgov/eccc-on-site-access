@@ -7,19 +7,22 @@ class AvailabilityController {
     console.info('request', request.query)
 
     let isAvailable
+    let nextAvailableTimeSlot
     try {
       isAvailable = proofApi.checkAvailability({ ...request.query })
+      nextAvailableTimeSlot = proofApi.nextAvailableTimeSlot({ ...request.query })
     } catch (error) {
       isAvailable = true
+      nextAvailableTimeSlot = null
       console.warn('proofApi failure:', error)
     }
 
     response.type('application/json')
     response.status(200)
     response.send({
-      isAvailable: isAvailable,
-      nextAvailableTimeSlot: null,
-      info: 'Access is denied if date is a Tuesday (e.g. 2020/07/07), time=5 or floor=13.',
+      isAvailable,
+      nextAvailableTimeSlot,
+      info: 'Access is denied if building capacity would be over 20% on a given day.',
     })
   }
 }

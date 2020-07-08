@@ -6,11 +6,15 @@ describe('isAvailable', () => {
     context('when querying the /is-time-available api', () => {
       context('when no args passed', () => {
         def('checkAvailability', () => td.replace(proofApi, 'checkAvailability'))
+        def('nextAvailableTimeSlot', () => td.replace(proofApi, 'nextAvailableTimeSlot'))
 
         beforeEach(() => {
           console.info = () => {}
           console.warn = () => {}
           td.when($checkAvailability({})).thenThrow(new Error('Some Proof API error ...'))
+          td.when($nextAvailableTimeSlot({})).thenThrow(
+            new Error('Some Proof API error ...')
+          )
         })
 
         afterEach(() => {
