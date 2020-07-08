@@ -9,12 +9,23 @@ return_from_base () {
     popd > /dev/null
 }
 
+app_container_id () {
+   echo $(dc_cmd ps -q app)
+}
+
 dc_cmd () {
    docker-compose -f docker-compose.development.yml "$@"
 }
 
 test () {
    dc_cmd run --rm test yarn test "$@"
+}
+
+debug () {
+    echo "Awaiting binding.pry to trigger..."
+    echo "'ctrl-c' to exit"
+    (docker attach --detach-keys ctrl-c $(app_container_id))
+    exit 0
 }
 
 main () {

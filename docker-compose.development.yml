@@ -4,14 +4,16 @@ services:
   app:
     image: eccc-on-site-access:development
     build: .
+    tty: true
+    stdin_open: true
     ports:
       - '4000:4000'
     volumes:
       - .:/usr/src/app
   test:
+    image: eccc-on-site-access:development
     depends_on:
       - app
-    image: eccc-on-site-access:development
     volumes:
       - .:/usr/src/app
     command: /bin/true
