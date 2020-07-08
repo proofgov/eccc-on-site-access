@@ -1,5 +1,6 @@
 // Entry point
 const path = require('path')
+const url = require('url')
 
 const express = require('express')
 
@@ -8,10 +9,7 @@ const routes = require(APP_ROOT + '/routes/index')
 
 const app = express()
 
-const { requester, protocol, hostname, port } = require(path.resolve(
-  APP_ROOT,
-  'utils/helpers'
-))
+const { protocol, hostname, port } = url.parse(APP_URL || 'http://localhost:4000')
 
 app.use('/', routes)
 
