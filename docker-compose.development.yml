@@ -3,9 +3,13 @@ version: '3.4'
 services:
   app:
     image: eccc-on-site-access:development
+    env_file:
+      - .env
     build: .
     tty: true
     stdin_open: true
+    environment:
+      NODE_ENV: development
     ports:
       - '4000:4000'
     volumes:
@@ -14,6 +18,8 @@ services:
     image: eccc-on-site-access:development
     depends_on:
       - app
+    environment:
+      NODE_ENV: test
     volumes:
       - .:/usr/src/app
     command: /bin/true
