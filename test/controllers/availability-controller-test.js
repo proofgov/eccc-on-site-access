@@ -17,28 +17,16 @@ describe('isAvailable', () => {
           )
         })
 
-        afterEach(() => {
-          console.info = ogInfoFunc
-          console.warn = ogWarnFunc
-          td.reset()
-        })
-
         it('return that the time is available', () => {
           return request(app)
             .get('/is-time-available')
             .then(response => expect(response.body).to.include({ isAvailable: true }))
-            .catch(function (err) {
-              throw err
-            })
         })
 
         it('always returns success', () => {
           return request(app)
             .get('/is-time-available')
             .then(response => expect(response.status).to.eq(200))
-            .catch(function (err) {
-              throw err
-            })
         })
       })
     })

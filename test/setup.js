@@ -7,8 +7,28 @@ const testdouble = require('testdouble')
 chai.use(chaiHttp)
 
 global.expect = chai.expect
-global.request = chai.request
+
+// allow mocking out apis
 global.td = testdouble
+
+// allow testing app endpoints
+global.request = chai.request
+
+// set up root directory for file lookup.
 global.APP_ROOT = Object.freeze(path.resolve(path.dirname(__filename) + '/../'))
-global.ogInfoFunc = console.info
-global.ogWarnFunc = console.warn
+
+// allow restoring console functions
+global.originalConsoleDebug = console.debug
+global.originalConsoleInfo = console.info
+global.originalConsoleWarn = console.warn
+global.originalConsoleError = console.error
+
+afterEach(() => {
+  // Ensure testdouble is reset after each test
+  td.reset()
+
+  console.debug = originalConsoleDebug
+  console.info = originalConsoleInfo
+  console.warn = originalConsoleWarn
+  console.error = originalConsoleError
+})

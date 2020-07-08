@@ -1,4 +1,3 @@
 ui: bdd-lazy-var/global
-require:
+file:
   - test/setup.js
-  - test/hooks.js
