@@ -1,6 +1,6 @@
 const axios = require('axios')
 
-describe('routes/index (app root page)', () => {
+describe('routes/index', () => {
   describe('GET /', () => {
     context('when hitting app root', () => {
       it('finds the welcome page', () => {

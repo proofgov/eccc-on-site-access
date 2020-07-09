@@ -2,16 +2,16 @@
 const proofApi = require(APP_ROOT + '/lib/proof-api')
 
 class AvailabilityController {
-  static getAvailability (request, response) {
+  static async getAvailability (request, response) {
     console.info('request.url', request.url)
     console.info('request', request.query)
 
     let isAvailable = true
     let nextAvailableTimeSlot = null
     try {
-      isAvailable = proofApi.checkAvailability({ ...request.query })
+      isAvailable = await proofApi.checkAvailability({ ...request.query })
       if (!isAvailable) {
-        nextAvailableTimeSlot = proofApi.nextAvailableTimeSlot({ ...request.query })
+        nextAvailableTimeSlot = await proofApi.nextAvailableTimeSlot({ ...request.query })
       }
     } catch (error) {
       console.warn('proofApi failure:', error)
