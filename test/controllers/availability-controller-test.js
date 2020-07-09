@@ -8,7 +8,7 @@ describe('isAvailable', () => {
 
       context('when no args passed', () => {
         beforeEach(() => {
-          console.info = () => {}
+          console.info = () => {} // reset automatically.
           console.warn = () => {}
           td.when($checkAvailability({})).thenThrow(new Error('Some Proof API error ...'))
           td.when($nextAvailableTimeSlot({})).thenThrow(
