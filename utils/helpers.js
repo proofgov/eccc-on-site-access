@@ -1,31 +1,45 @@
-const fs = require("fs");
-const http = require("http");
-const https = require("https");
-const path = require("path");
-const url = require("url");
-const yaml = require("js-yaml");
+const fs = require('fs')
+const http = require('http')
+const https = require('https')
+const path = require('path')
+const url = require('url')
+const yaml = require('js-yaml')
 
-const timeSlotsPath = path.resolve(APP_ROOT, "data/time_slots.yml");
+const timeSlotsPath = path.resolve(APP_ROOT, 'data/time_slots.yml')
 
-const { PROOF_URL } = process.env;
-const { protocol, hostname, port } = url.parse(PROOF_URL || "");
+const { PROOF_URL } = process.env
+const { protocol, hostname, port } = url.parse(PROOF_URL || '')
 
-function loadTimeSlotsDefaults() {
+function loadTimeSlotsDefaults () {
   try {
-    return yaml.safeLoad(fs.readFileSync(timeSlotsPath, "utf8"));
+    return yaml.safeLoad(fs.readFileSync(timeSlotsPath, 'utf8'))
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
 }
 
-function selectRequestLibrary() {
-  return protocol === "https:" ? https : http;
+function selectRequestLibrary () {
+  return protocol === 'https:' ? https : http
+}
+
+function loadProvinceToBuildingToOccupancyMap () {
+  const buildingOccupancyPath = path.resolve(
+    APP_ROOT,
+    'data/province_to_buildings_to_occupancy.yml'
+  )
+
+  try {
+    return yaml.safeLoad(fs.readFileSync(buildingOccupancyPath, 'utf8'))
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 module.exports = {
   loadTimeSlotsDefaults,
+  loadProvinceToBuildingToOccupancyMap,
   requester: selectRequestLibrary(),
   protocol,
   hostname,
   port,
-};
+}
