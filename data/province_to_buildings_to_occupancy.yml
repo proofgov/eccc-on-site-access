@@ -1,7 +1,6 @@
 ---
 Alberta:
   Biological Sciences Building: 6
-  Douglas Jung Building: 355
   Eastgate Building: 271
   Harry Hays Building: 53
   Meanook National Wildlife Area: 5
@@ -14,6 +13,7 @@ British Columbia:
   Canadian Forces Base (CFB) Esquimalt: 8
   Cranbrook - Enforcement: 2
   Cranbrook - Water Survey: 5
+  Douglas Jung Building: 355
   Institute of Ocean Sciences (IOS): 4
   Kelowna National Service Office: 13
   Monitoring Operations Center (MOC): 38
@@ -49,30 +49,30 @@ Newfoundland and Labrador:
   Cartwright: 4
   Fortis Towers: 9
   Gander International Airport: 21
-  Government of Canada Building: 1
+  Government of Canada Building: 51
   Happy Valley - Goose Bay: 4
   Happy Valley / Goose Bay - Upper Air Station: 2
   Stephenville Upper Air Station: 2
 Northwest Territories:
   Fort Simpson - Water Survey Office: 2
   Fort Smith Upper Air Station: 3
-  Inuvik Upper Air Station: 4
   Inuvik - Water Survey Building: 3
+  Inuvik Upper Air Station: 4
   Norman Wells Upper Air Station: 3
   Nova Plaza: 64
 Nova Scotia:
   Bedford Institute Oceanography (BIO): 9
   Bedford Trade Mart: 4
   Canadian Forces Base (CFB) Greenwood: 1
-  Dayton Mall: 1
   DND-MetOc Halifax: 11
+  Dayton Mall: 1
   Halifax - 1801 Hollis St.: 1
   Queen Square: 292
 Nunavut:
   Alert Weather Station (Upper Air Station): 2
   Baker Lake Upper Air Station: 2
-  Canadian Arctic Marine Wildlife Research Centre: 4
   Cambridge Bay Upper Air Station: 5
+  Canadian Arctic Marine Wildlife Research Centre: 4
   Coral Harbour Upper Air Station: 4
   Eureka: 8
   Iqaluit: 2
@@ -102,10 +102,19 @@ Ontario:
 Prince Edward Island:
   Jean Canfield Building: 2
 Quebec:
-  de Varennes: 51
+  105 McGill - Dominique Ducharme Building: 334
+  Biosphère: 22
+  Canadian Forces Base (CFB) Bagotville: 1
+  Canadian Meteorological Centre (CMC): 395
+  Cap Tourmente National Wildlife Area: 12
+  Estimauville: 168
   Fontaine Building: 811
-  Place Vincent Massey Annex (PVMA): 433
+  Harrington Harbor: 2
+  OURANOS: 1
+  Place Bonaventure: 245
   Place Vincent Massey (PVM): 1624
+  Place Vincent Massey Annex (PVMA): 433
+  de Varennes: 51
 Saskatchewan:
   Alvin Hamilton Building: 53
   Last Mountain Lake National Wildlife Area: 10
