@@ -6,14 +6,14 @@ class AvailabilityController {
     console.info('request.url', request.url)
     console.info('request', request.query)
 
-    let isAvailable
-    let nextAvailableTimeSlot
+    let isAvailable = true
+    let nextAvailableTimeSlot = null
     try {
       isAvailable = proofApi.checkAvailability({ ...request.query })
-      nextAvailableTimeSlot = proofApi.nextAvailableTimeSlot({ ...request.query })
+      if (!isAvailable) {
+        nextAvailableTimeSlot = proofApi.nextAvailableTimeSlot({ ...request.query })
+      }
     } catch (error) {
-      isAvailable = true
-      nextAvailableTimeSlot = null
       console.warn('proofApi failure:', error)
     }
 
