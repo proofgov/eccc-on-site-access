@@ -22,7 +22,9 @@ class AvailabilityController {
     response.send({
       isAvailable,
       nextAvailableTimeSlot,
-      info: 'Access is denied if building capacity would be over 20% on a given day.',
+      info:
+        'If building capacity is less than 10 people always allow.\n' +
+        'If building capacity would be over 20% on a given day access is denied.\n',
     })
   }
 }
