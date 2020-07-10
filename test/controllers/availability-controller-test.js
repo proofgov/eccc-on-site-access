@@ -23,7 +23,7 @@ describe('controllers/availability-controller', () => {
           it('return that the time is available', () => {
             return request(app)
               .get('/is-time-available')
-              .then(response => expect(response.body).to.include({ isAvailable: true }))
+              .then(response => expect(response.body).to.include({ isAvailable: false }))
           })
 
           it('always returns success', () => {

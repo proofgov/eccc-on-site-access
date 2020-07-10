@@ -6,7 +6,7 @@ class AvailabilityController {
     console.info('request.url', request.url)
     console.info('request', request.query)
 
-    let isAvailable = true
+    let isAvailable = false
     let nextAvailableTimeSlot = null
     try {
       isAvailable = await proofApi.checkAvailability({ ...request.query })

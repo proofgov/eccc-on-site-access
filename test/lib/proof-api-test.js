@@ -112,7 +112,7 @@ describe('lib/proof-api', () => {
           await proofApi.checkAvailability({
             invalid: 'args',
           })
-        ).to.be.true
+        ).to.be.false
       })
     })
   })
