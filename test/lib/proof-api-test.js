@@ -97,22 +97,34 @@ describe('lib/proof-api', () => {
     })
 
     context('when missing arguments', () => {
-      it('warns of missing args', async () => {
-        const warnMock = td.replace(console, 'warn')
+      it('raises an error', () => {
+        return proofApi
+          .checkAvailability({ invalid: 'args' })
+          .then(() => expect.fail())
+          .catch(error => {
+            expect(error.message).to.match(/Missing required params/)
+          })
+      })
+    })
 
-        await proofApi.checkAvailability({ invalid: 'args' })
-
-        td.verify(warnMock(td.matchers.contains('Missing required params')))
+    context('when proof server is down', () => {
+      beforeEach(() => {
+        td.when($getMock(), { ignoreExtraArgs: true }).thenThrow(
+          new Error('PROOF api failure')
+        )
       })
 
-      it('returns true', async () => {
+      it('throws an error', async () => {
         console.warn = () => null // suppress warn, reset automatically.
-
-        expect(
-          await proofApi.checkAvailability({
-            invalid: 'args',
+        return proofApi
+          .checkAvailability({
+            'location.province': 'Yukon',
+            'location.building': 'Combined Services Bldg',
           })
-        ).to.be.false
+          .then(() => expect.fail())
+          .catch(error => {
+            expect(error.message).to.match(/PROOF api failure/)
+          })
       })
     })
   })

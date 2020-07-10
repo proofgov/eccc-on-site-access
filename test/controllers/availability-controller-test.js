@@ -20,7 +20,7 @@ describe('controllers/availability-controller', () => {
             )
           })
 
-          it('return that the time is available', () => {
+          it('return that the time not available', () => {
             return request(app)
               .get('/is-time-available')
               .then(response => expect(response.body).to.include({ isAvailable: false }))
