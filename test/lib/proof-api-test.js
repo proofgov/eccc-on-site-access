@@ -6,9 +6,9 @@ const axios = require('axios')
 const proofApi = require(APP_ROOT + '/lib/proof-api')
 
 describe('lib/proof-api', () => {
-  describe('#checkAvailability', () => {
-    def('getMock', () => td.replace(axios, 'get'))
+  def('getMock', () => td.replace(axios, 'get'))
 
+  describe('#checkAvailability', () => {
     def('proofApiResponse', () =>
       JSON.parse(
         fs.readFileSync(
@@ -113,6 +113,40 @@ describe('lib/proof-api', () => {
             invalid: 'args',
           })
         ).to.be.true
+      })
+    })
+  })
+
+  describe('#nextAvailableTimeSlot', () => {
+    context('when looking for the next available time slot', () => {
+      context('when next available day is the next day', () => {
+        def('proofApiTimeSlotAvailableResponse', () =>
+          JSON.parse(
+            fs.readFileSync(
+              path.resolve(APP_ROOT, 'dummy/proof_sumbissions_response.json'),
+              'utf8'
+            )
+          )
+        )
+
+        beforeEach(() => {
+          td.when(
+            $getMock(td.matchers.contains('2020-07-11'), td.matchers.anything())
+          ).thenResolve({
+            data: $proofApiTimeSlotAvailableResponse,
+          })
+        })
+
+        it('returns the next day', async () => {
+          expect(
+            await proofApi.nextAvailableTimeSlot({
+              'location.province': 'Yukon',
+              'location.building': 'Yukon Weather Centre',
+              'request.date': '2020-07-10',
+              'request.time': '4',
+            })
+          ).to.eq('2020-07-11')
+        })
       })
     })
   })
