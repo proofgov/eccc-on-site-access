@@ -20,6 +20,8 @@ services:
       - app
     environment:
       NODE_ENV: test
+    # Lets you test against a local version of PROOF core-app.
+    # network_mode: host
     volumes:
       - .:/usr/src/app
     command: /bin/true
