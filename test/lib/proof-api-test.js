@@ -9,17 +9,14 @@ describe('lib/proof-api', () => {
   describe('#checkAvailability', () => {
     def('getMock', () => td.replace(axios, 'get'))
 
-    def('proofApiResponse', () => {
-      const proofApiResponse = path.resolve(
-        APP_ROOT,
-        'dummy/proof_sumbissions_response.json'
+    def('proofApiResponse', () =>
+      JSON.parse(
+        fs.readFileSync(
+          path.resolve(APP_ROOT, 'dummy/proof_sumbissions_response.json'),
+          'utf8'
+        )
       )
-      try {
-        return JSON.parse(fs.readFileSync(proofApiResponse, 'utf8'))
-      } catch (error) {
-        console.log(error)
-      }
-    })
+    )
 
     def('queryOptions', () => ({
       headers: {
@@ -71,17 +68,14 @@ describe('lib/proof-api', () => {
       })
 
       context('when building is more than 20% occupancy for that day', () => {
-        def('proofApiResponse', () => {
-          const proofApiResponse = path.resolve(
-            APP_ROOT,
-            'dummy/proof_sumbissions_over_capacity_response.json'
+        def('proofApiResponse', () =>
+          JSON.parse(
+            fs.readFileSync(
+              path.resolve(APP_ROOT, 'dummy/proof_sumbissions_over_capacity_response.json'),
+              'utf8'
+            )
           )
-          try {
-            return JSON.parse(fs.readFileSync(proofApiResponse, 'utf8'))
-          } catch (error) {
-            console.log(error)
-          }
-        })
+        )
 
         beforeEach(() => {
           td.when($getMock(), { ignoreExtraArgs: true }).thenResolve({
