@@ -84,5 +84,25 @@ describe('lib/proof-api', () => {
       //   })
       // })
     })
+
+    context('when missing arguments', () => {
+      it('warns of missing args', async () => {
+        const warnMock = td.replace(console, 'warn')
+
+        await proofApi.checkAvailability({ invalid: 'args' })
+
+        td.verify(warnMock(td.matchers.contains('Missing required params')))
+      })
+
+      it('returns true', async () => {
+        console.warn = () => null // suppress warn, reset automatically.
+
+        expect(
+          await proofApi.checkAvailability({
+            invalid: 'args',
+          })
+        ).to.be.true
+      })
+    })
   })
 })
