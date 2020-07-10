@@ -89,7 +89,7 @@ describe('lib/proof-api', () => {
           })
         })
 
-        it.only('returns false', async () => {
+        it('returns false', async () => {
           expect(
             await proofApi.checkAvailability({
               'location.province': 'Yukon',
