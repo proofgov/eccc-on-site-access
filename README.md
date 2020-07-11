@@ -6,7 +6,16 @@
 - Boot the app `docker-compose up -d`
 - Watch the locks with `docker-compose logs -f`
 - Restart the app (to get new code changes) `docker-compose restart`
-- Test the app vai `docker-compose exec app yarn test`
+- Test the app vai `docker-compose exec app yarn test` (or just `dev test`)
+
+To push environmental variables into the container make a `.env` file root directory.
+e.g.
+```
+PROOF_URL=https://edge.proofgov.com
+PROOF_API_TOKEN=<....>
+FORM_CONFIG_ID=12
+APP_URL=http://eccc-on-site-access.proofgov.com:4000
+```
 
 ## **Old** Example Form Query API
 
