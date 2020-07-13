@@ -4,11 +4,9 @@ const { loadTimeSlotDefaults } = require(path.resolve(APP_ROOT + '/utils/helpers
 
 class TimeSlotsController {
   static getTimeSlots (request, response) {
-    console.log('request.url', request.url)
+    console.log(`${request.method}: ${request.url}`)
 
-    response.type('application/json')
-    response.status(200)
-    response.send(loadTimeSlotDefaults())
+    response.status(200).json(loadTimeSlotDefaults())
   }
 }
 
