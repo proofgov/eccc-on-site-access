@@ -6,9 +6,7 @@ class TimeSlotsController {
   static getTimeSlots (request, response) {
     response.type('application/json')
     response.status(200)
-    response.send({
-      availableTimeSlots: loadTimeSlotDefaults(),
-    })
+    response.send(loadTimeSlotDefaults())
   }
 }
 
