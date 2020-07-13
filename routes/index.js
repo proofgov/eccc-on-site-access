@@ -1,5 +1,6 @@
 const { Router } = require('express')
 const AvailabilityController = require(APP_ROOT + '/controllers/availability-controller')
+const TimeSlotsController = require(APP_ROOT + '/controllers/time-slots-controller')
 
 const routes = Router()
 
@@ -12,5 +13,6 @@ routes.get('/', (request, response) =>
 
 // building name, floor, request date and request time as parameters.
 routes.get('/is-time-available', AvailabilityController.getAvailability)
+routes.get('/available-time-slots', TimeSlotsController.getTimeSlots)
 
 module.exports = routes

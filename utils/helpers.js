@@ -5,12 +5,12 @@ const path = require('path')
 const url = require('url')
 const yaml = require('js-yaml')
 
-const timeSlotsPath = path.resolve(APP_ROOT, 'data/time_slots.yml')
-
 const { PROOF_URL } = process.env
 const { protocol, hostname, port } = url.parse(PROOF_URL || '')
 
-function loadTimeSlotsDefaults () {
+function loadTimeSlotDefaults () {
+  const timeSlotsPath = path.resolve(APP_ROOT, 'data/time_slots.yml')
+
   try {
     return yaml.safeLoad(fs.readFileSync(timeSlotsPath, 'utf8'))
   } catch (error) {
@@ -36,7 +36,7 @@ function loadProvinceToBuildingToOccupancyMap () {
 }
 
 module.exports = {
-  loadTimeSlotsDefaults,
+  loadTimeSlotDefaults,
   loadProvinceToBuildingToOccupancyMap,
   requester: selectRequestLibrary(),
   protocol,
