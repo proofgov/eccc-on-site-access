@@ -6,7 +6,7 @@ class TimeSlotsController {
   static getTimeSlots (request, response) {
     console.log(`${request.method}: ${request.url}`)
 
-    response.status(200).json(loadTimeSlotDefaults())
+    response.status(200).json({ availableTimeSlots: loadTimeSlotDefaults() })
   }
 }
 
