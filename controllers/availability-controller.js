@@ -3,7 +3,6 @@ const proofApi = require(APP_ROOT + '/lib/proof-api')
 
 class AvailabilityController {
   static async getAvailability (request, response) {
-    console.info('request.url', request.url)
     console.info('request', request.query)
 
     let isAvailable = false
