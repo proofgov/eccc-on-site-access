@@ -1,3 +1,5 @@
+const moment = require('moment')
+
 const proofApi = require(APP_ROOT + '/lib/proof-api')
 
 describe('controllers/availability-controller', () => {
@@ -44,6 +46,73 @@ describe('controllers/availability-controller', () => {
               .get('/is-time-available')
               .then(response =>
                 expect(response.body).to.include({ nextAvailableTimeSlot: null })
+              )
+          })
+        })
+      })
+    })
+  })
+
+  describe('#getDays', () => {
+    describe('GET /available-days', () => {
+      context('when retreiving date availablity', () => {
+        def('nextAvailableDaysMock', () => td.replace(proofApi, 'nextAvailableDays'))
+
+        context('when api call succceds', () => {
+          def('apiResponse', () => [
+            {
+              label: '13 (out of 55) appointments available on 2020/07/16',
+              value: '2020/07/16',
+            },
+          ])
+
+          beforeEach(() => {
+            td.when($nextAvailableDaysMock({})).thenResolve($apiResponse)
+          })
+
+          it('returns the next available dates', async () => {
+            return request(app)
+              .get('/available-days')
+              .then(response =>
+                expect(response.body.availableDays).to.deep.eq($apiResponse)
+              )
+          })
+        })
+
+        context('when called', () => {
+          def('apiResponse', () => 'whatever')
+
+          beforeEach(() => {
+            td.when($nextAvailableDaysMock({ key: 'value' })).thenResolve($apiResponse)
+          })
+
+          it('passes query args to api', async () => {
+            return request(app)
+              .get('/available-days?key=value')
+              .then(response =>
+                expect(response.body.availableDays).to.deep.eq($apiResponse)
+              )
+          })
+        })
+
+        context('when api call fails', () => {
+          beforeEach(() => {
+            td.when($nextAvailableDaysMock({})).thenThrow(
+              new Error('Service unavailable ...')
+            )
+            console.warn = () => {} // reset automatically
+          })
+
+          it('returns the an error message and the current date', async () => {
+            return request(app)
+              .get('/available-days')
+              .then(response =>
+                expect(response.body.availableDays).to.deep.eq([
+                  {
+                    label: 'External API failure please report to ....',
+                    value: moment().format('YYYY-MM-DD'),
+                  },
+                ])
               )
           })
         })

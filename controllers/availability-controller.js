@@ -28,27 +28,17 @@ class AvailabilityController {
   }
 
   static async getDays (request, response) {
-    // const availableDays = await proofApi.nextAvailableDays({ ...request.query })
-    const availableDays = [
+    let availableDays = [
       {
-        label: `${moment().calendar()} has 110 slots available (of a total of 312)`,
-        value: `${moment().format('YYYY-MM-DD')}`,
-      },
-      {
-        label: `${moment().calendar()} has 7 slots available (of a total of 40)`,
-        value: `${moment()
-          .add(3, 'days')
-          .format('YYYY-MM-DD')}`,
-      },
-      {
-        label: `13 (out of 55) appointments available on ${moment()
-          .add(7, 'days')
-          .format('MMMM Do YYYY')}`,
-        value: `${moment()
-          .add(7, 'days')
-          .format('YYYY-MM-DD')}`,
+        label: 'External API failure please report to ....',
+        value: moment().format('YYYY-MM-DD'),
       },
     ]
+    try {
+      availableDays = await proofApi.nextAvailableDays({ ...request.query })
+    } catch (error) {
+      console.warn('PROOF API failure:', error)
+    }
 
     response.type('application/json')
     response.status(200)
