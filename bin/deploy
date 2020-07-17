@@ -1,2 +1,6 @@
 #!/usr/bin/env bash
-dc down -v && git pull && dc build && dc up -d && dc logs -f
+docker-compose down -v \
+  && git pull \
+  && docker-compose build \
+  && docker-compose up -d \
+  && docker-compose logs -f
