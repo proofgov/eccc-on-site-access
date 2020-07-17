@@ -42,6 +42,14 @@ class AvailabilityController {
           .add(3, 'days')
           .format('YYYY-MM-DD')}`,
       },
+      {
+        label: `13 (out of 55) appointments available on ${moment()
+          .add(7, 'days')
+          .format('MMMM Do YYYY')}`,
+        value: `${moment()
+          .add(7, 'days')
+          .format('YYYY-MM-DD')}`,
+      },
     ]
 
     response.type('application/json')
