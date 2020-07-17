@@ -12,7 +12,8 @@ routes.get('/', (request, response) =>
 )
 
 // building name, floor, request date and request time as parameters.
-routes.get('/is-time-available', AvailabilityController.getAvailability)
 routes.get('/available-time-slots', TimeSlotsController.getTimeSlots)
+routes.get('/available-days', AvailabilityController.getDays)
+routes.get('/is-time-available', AvailabilityController.getAvailability)
 
 module.exports = routes
