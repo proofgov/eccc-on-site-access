@@ -4,6 +4,7 @@ const path = require('path')
 const axios = require('axios')
 
 const proofApi = require(APP_ROOT + '/lib/proof-api')
+const helpers = require(APP_ROOT + '/lib/api-helpers')
 
 describe('lib/proof-api', () => {
   def('getMock', () => td.replace(axios, 'get'))
@@ -159,6 +160,50 @@ describe('lib/proof-api', () => {
             })
           ).to.eq('2020-07-11')
         })
+      })
+    })
+  })
+
+  describe('#fetchOccupancyInfo', () => {
+    context('when passed a province and building', () => {
+      def('fetchCurrentSubmissionDataMock', () =>
+        td.replace(helpers, 'fetchCurrentSubmissionData')
+      )
+
+      def('capacityResponse', () =>
+        JSON.parse(
+          fs.readFileSync(path.resolve(APP_ROOT, 'dummy/capacity-data.json'), 'utf8')
+        )
+      )
+
+      beforeEach(() => {
+        td.when(
+          $fetchCurrentSubmissionDataMock({
+            'location.province': 'Yukon',
+            'location.building': 'Yukon Weather Centre',
+            'request.date': '2020-07-10',
+          })
+        ).thenResolve($capacityResponse)
+      })
+
+      it('returns the allowed occupancy of the building', async () => {
+        return proofApi
+          .fetchOccupancyInfo({
+            'location.province': 'Yukon',
+            'location.building': 'Yukon Weather Centre',
+            'request.date': '2020-07-10',
+          })
+          .then(response => expect(response).to.have.property('allowed', 19))
+      })
+
+      it('returns the current occupancy of the building', () => {
+        return proofApi
+          .fetchOccupancyInfo({
+            'location.province': 'Yukon',
+            'location.building': 'Yukon Weather Centre',
+            'request.date': '2020-07-10',
+          })
+          .then(response => expect(response).to.have.property('current', 8))
       })
     })
   })
