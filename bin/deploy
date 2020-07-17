@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+dc down -v && git pull && dc build && dc up -d && dc logs -f
