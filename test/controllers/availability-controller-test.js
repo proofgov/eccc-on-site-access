@@ -1,13 +1,12 @@
 const proofApi = require(APP_ROOT + '/lib/proof-api')
 
 describe('controllers/availability-controller', () => {
-  describe('isAvailable', () => {
-    describe('GET /is-time-available', () => {
-      beforeEach(() => {
-        console.info = () => {} // these are reset automatically.
-        console.warn = () => {}
-      })
+  beforeEach(() => {
+    console.log = () => {} // these are reset automatically.
+  })
 
+  describe('#getAvailability', () => {
+    describe('GET /is-time-available', () => {
       context('when querying the /is-time-available api', () => {
         def('checkAvailability', () => td.replace(proofApi, 'checkAvailability'))
         def('nextAvailableTimeSlot', () => td.replace(proofApi, 'nextAvailableTimeSlot'))
@@ -18,6 +17,7 @@ describe('controllers/availability-controller', () => {
             td.when($nextAvailableTimeSlot({})).thenThrow(
               new Error('Some Proof API error ...')
             )
+            console.warn = () => {}
           })
 
           it('return that the time not available', () => {

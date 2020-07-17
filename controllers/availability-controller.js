@@ -5,8 +5,6 @@ const proofApi = require(APP_ROOT + '/lib/proof-api')
 
 class AvailabilityController {
   static async getAvailability (request, response) {
-    console.info('request', request.query)
-
     let isAvailable = false
     let nextAvailableTimeSlot = null
     try {
