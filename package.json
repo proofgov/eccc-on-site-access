@@ -20,6 +20,7 @@
     "express-basic-auth": "^1.2.0",
     "faker": "^4.1.0",
     "js-yaml": "^3.14.0",
+    "moment": "^2.27.0",
     "nodemon": "^2.0.4"
   },
   "devDependencies": {
