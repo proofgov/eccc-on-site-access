@@ -15,7 +15,7 @@ const allRoutePaths = routes.stack
   })
   .filter(Boolean)
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV !== 'test') {
   console.log('Paths:', allRoutePaths)
 }
 
