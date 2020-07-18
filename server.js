@@ -6,6 +6,7 @@ const express = require('express')
 const morgan = require('morgan')
 
 global.APP_ROOT = Object.freeze(path.dirname(__filename))
+global.logger = require(APP_ROOT + '/utils/logger')
 const routes = require(APP_ROOT + '/routes/index')
 
 const app = express()
