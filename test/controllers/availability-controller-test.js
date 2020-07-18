@@ -48,10 +48,11 @@ describe('controllers/availability-controller', () => {
     })
   })
 
-  describe('#getDays', () => {
+  describe('#getAvailabilityPerDay', () => {
     describe('GET /available-days', () => {
       context('when retreiving date availablity', () => {
         def('nextAvailableDaysMock', () => td.replace(proofApi, 'nextAvailableDays'))
+        def('getBuildingCapacityMock', () => td.replace(proofApi, 'getBuildingCapacity'))
 
         context('when api call succceds', () => {
           def('apiResponse', () => [
@@ -62,53 +63,98 @@ describe('controllers/availability-controller', () => {
           ])
 
           beforeEach(() => {
-            td.when($nextAvailableDaysMock({})).thenResolve($apiResponse)
+            td.when(
+              $nextAvailableDaysMock({
+                'location.province': 'Yukon',
+                'location.building': 'Yukon Weather Centre',
+                'request.date': '2020-07-10',
+              })
+            ).thenResolve($apiResponse)
           })
 
           it('returns the next available dates', async () => {
             return request(app)
-              .get('/available-days')
+              .get(
+                '/available-days?' +
+                  'location.province=Yukon&' +
+                  'location.building=Yukon Weather Centre&' +
+                  'request.date=2020-07-10'
+              )
               .then(response =>
                 expect(response.body.availableDays).to.deep.eq($apiResponse)
               )
           })
         })
 
-        context('when called', () => {
-          def('apiResponse', () => 'whatever')
+        context('when api calls fail', () => {
+          context('when parameters missing', () => {
+            beforeEach(() => {
+              td.when(
+                $getBuildingCapacityMock({ province: undefined, building: undefined })
+              ).thenThrow(new Error('Missing required params ...'))
+            })
 
-          beforeEach(() => {
-            td.when($nextAvailableDaysMock({ key: 'value' })).thenResolve($apiResponse)
+            it('returns a human readable response', () => {
+              return request(app)
+                .get('/available-days')
+                .then(response =>
+                  expect(response.body).to.deep.eq({
+                    availableDays: [
+                      {
+                        label:
+                          'External API failure please report to the relevant authorities.',
+                        value: moment().format('YYYY-MM-DD'),
+                      },
+                    ],
+                    buildingCapacity: null,
+                    error: 'Missing required params ...',
+                    info:
+                      'Access is denied if building capacity would be over 20% on a given day.',
+                  })
+                )
+            })
           })
 
-          it('passes query args to api', async () => {
-            return request(app)
-              .get('/available-days?key=value')
-              .then(response =>
-                expect(response.body.availableDays).to.deep.eq($apiResponse)
-              )
-          })
-        })
-
-        context('when api call fails', () => {
-          beforeEach(() => {
-            td.when($nextAvailableDaysMock({})).thenThrow(
-              new Error('Service unavailable ...')
-            )
-            console.warn = () => {} // reset automatically
-          })
-
-          it('returns the an error message and the current date', async () => {
-            return request(app)
-              .get('/available-days')
-              .then(response =>
-                expect(response.body.availableDays).to.deep.eq([
-                  {
-                    label: 'External API failure please report to ....',
-                    value: moment().format('YYYY-MM-DD'),
-                  },
-                ])
-              )
+          context('availability lookup fails', () => {
+            beforeEach(() => {
+              td.when(
+                $getBuildingCapacityMock({
+                  province: 'Yukon',
+                  building: 'Yukon Weather Centre',
+                })
+              ).thenReturn(9999)
+              td.when(
+                $nextAvailableDaysMock({
+                  'location.province': 'Yukon',
+                  'location.building': 'Yukon Weather Centre',
+                  'request.date': '2020-07-10',
+                })
+              ).thenThrow(new Error('Service unavailable ...'))
+            })
+            it('returns the an error message and the current date', async () => {
+              return request(app)
+                .get(
+                  '/available-days?' +
+                    'location.province=Yukon&' +
+                    'location.building=Yukon Weather Centre&' +
+                    'request.date=2020-07-10'
+                )
+                .then(response =>
+                  expect(response.body).to.deep.eq({
+                    availableDays: [
+                      {
+                        label:
+                          'External API failure please report to the relevant authorities.',
+                        value: moment().format('YYYY-MM-DD'),
+                      },
+                    ],
+                    buildingCapacity: 9999,
+                    error: 'Service unavailable ...',
+                    info:
+                      'Access is denied if building capacity would be over 20% on a given day.',
+                  })
+                )
+            })
           })
         })
       })

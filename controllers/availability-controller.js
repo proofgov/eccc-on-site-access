@@ -1,12 +1,12 @@
 const moment = require('moment')
 
-// const submissions = require(APP_ROOT + '/dummy/proof_sumbissions_response.json')
 const proofApi = require(APP_ROOT + '/lib/proof-api')
 
 class AvailabilityController {
   static async getAvailability (request, response) {
     let isAvailable = false
     let nextAvailableTimeSlot = null
+    let errorMessage = null
     try {
       isAvailable = await proofApi.checkAvailability({ ...request.query })
       if (!isAvailable) {
@@ -14,6 +14,7 @@ class AvailabilityController {
       }
     } catch (error) {
       logger.error(error.message)
+      errorMessage = error.message
     }
 
     response.type('application/json')
@@ -24,23 +25,26 @@ class AvailabilityController {
       info:
         'If building capacity is less than 10 people always allow.\n' +
         'If building capacity would be over 20% on a given day access is denied.\n',
+      error: errorMessage,
     })
   }
 
-  static async getDays (request, response) {
-    const { 'location.province': province, 'location.building': building } = request.query
-    const buildingCapacity = proofApi.getBuildingCapacity({ province, building })
-
+  static async getAvailabilityPerDay (request, response) {
+    let buildingCapacity = null
     let availableDays = [
       {
         label: 'External API failure please report to the relevant authorities.',
         value: moment().format('YYYY-MM-DD'),
       },
     ]
+    let errorMessage = null
     try {
+      const { 'location.province': province, 'location.building': building } = request.query
+      buildingCapacity = proofApi.getBuildingCapacity({ province, building })
       availableDays = await proofApi.nextAvailableDays({ ...request.query })
     } catch (error) {
       logger.error(error.message)
+      errorMessage = error.message
     }
 
     response.type('application/json')
@@ -48,7 +52,8 @@ class AvailabilityController {
     response.send({
       availableDays,
       buildingCapacity,
-      info: 'If building capacity would be over 20% on a given day access is denied.',
+      info: 'Access is denied if building capacity would be over 20% on a given day.',
+      error: errorMessage,
     })
   }
 }
