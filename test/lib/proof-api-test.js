@@ -207,4 +207,38 @@ describe('lib/proof-api', () => {
       })
     })
   })
+
+  describe('#nextAvailableDays', () => {
+    def('fetchCurrentSubmissionDataMock', () =>
+      td.replace(helpers, 'fetchCurrentSubmissionData')
+    )
+
+    def('capacityResponse', () =>
+      JSON.parse(
+        fs.readFileSync(path.resolve(APP_ROOT, 'dummy/capacity-data.json'), 'utf8')
+      )
+    )
+
+    context('when looking for the next available date', () => {
+      beforeEach(() => {
+        td.when(
+          $fetchCurrentSubmissionDataMock({
+            'location.province': 'Yukon',
+            'location.building': 'Yukon Weather Centre',
+            'request.date': '2020-07-10',
+          })
+        ).thenResolve($capacityResponse)
+      })
+
+      it('returns an array', async () => {
+        return proofApi
+          .nextAvailableDays({
+            'location.province': 'Yukon',
+            'location.building': 'Yukon Weather Centre',
+            'request.date': '2020-07-10',
+          })
+          .then(response => expect(response).be.an('array'))
+      })
+    })
+  })
 })

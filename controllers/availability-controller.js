@@ -28,9 +28,12 @@ class AvailabilityController {
   }
 
   static async getDays (request, response) {
+    const { 'location.province': province, 'location.building': building } = request.query
+    const buildingCapacity = proofApi.getBuildingCapacity({ province, building })
+
     let availableDays = [
       {
-        label: 'External API failure please report to ....',
+        label: 'External API failure please report to the relevant authorities.',
         value: moment().format('YYYY-MM-DD'),
       },
     ]
@@ -44,9 +47,8 @@ class AvailabilityController {
     response.status(200)
     response.send({
       availableDays,
-      info:
-        'If building capacity is less than 10 people always allow.\n' +
-        'If building capacity would be over 20% on a given day access is denied.\n',
+      buildingCapacity,
+      info: 'If building capacity would be over 20% on a given day access is denied.',
     })
   }
 }
