@@ -6,6 +6,6 @@ services:
       - .env
     build: .
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
     ports:
       - '4000:4000'
