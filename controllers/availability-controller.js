@@ -13,7 +13,7 @@ class AvailabilityController {
         nextAvailableTimeSlot = await proofApi.nextAvailableTimeSlot({ ...request.query })
       }
     } catch (error) {
-      console.warn('proofApi failure:', error)
+      logger.error(error.message)
     }
 
     response.type('application/json')
@@ -40,7 +40,7 @@ class AvailabilityController {
     try {
       availableDays = await proofApi.nextAvailableDays({ ...request.query })
     } catch (error) {
-      console.warn('PROOF API failure:', error)
+      logger.error(error.message)
     }
 
     response.type('application/json')
