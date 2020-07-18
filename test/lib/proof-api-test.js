@@ -116,7 +116,6 @@ describe('lib/proof-api', () => {
       })
 
       it('throws an error', async () => {
-        console.warn = () => null // suppress warn, reset automatically.
         return proofApi
           .checkAvailability({
             'location.province': 'Yukon',

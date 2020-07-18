@@ -3,10 +3,6 @@ const moment = require('moment')
 const proofApi = require(APP_ROOT + '/lib/proof-api')
 
 describe('controllers/availability-controller', () => {
-  beforeEach(() => {
-    console.log = () => {} // these are reset automatically.
-  })
-
   describe('#getAvailability', () => {
     describe('GET /is-time-available', () => {
       context('when querying the /is-time-available api', () => {
@@ -19,7 +15,6 @@ describe('controllers/availability-controller', () => {
             td.when($nextAvailableTimeSlot({})).thenThrow(
               new Error('Some Proof API error ...')
             )
-            console.warn = () => {}
           })
 
           it('return that the time not available', () => {
