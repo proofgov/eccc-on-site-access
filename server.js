@@ -1,4 +1,5 @@
 // Entry point
+// const https = require('https')
 const path = require('path')
 const url = require('url')
 
@@ -8,6 +9,10 @@ const morgan = require('morgan')
 global.APP_ROOT = Object.freeze(path.dirname(__filename))
 global.logger = require(APP_ROOT + '/utils/logger')
 const routes = require(APP_ROOT + '/routes/index')
+
+// const privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');
+// const certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
+// const credentials = {key: privateKey, cert: certificate};
 
 const app = express()
 
@@ -24,7 +29,10 @@ app.use(
 )
 app.use(routes)
 
+// const httpsServer = https.createServer(credentials, app);
+
 if (!module.parent) {
+  // httpsServer.listen(8443, () => console.log(`Server started at ${protocol}//${hostname}:${port}`));
   app.listen(port, () => console.log(`Server started at ${protocol}//${hostname}:${port}`))
 }
 
