@@ -177,7 +177,7 @@ describe('lib/proof-api', () => {
   })
 
   describe('#fetchOccupancyInfo', () => {
-    context('when passed a province and building', () => {
+    context('when passed a province and building and date', () => {
       def('fetchCurrentSubmissionDataMock', () =>
         td.replace(helpers, 'fetchCurrentSubmissionData')
       )
@@ -198,16 +198,6 @@ describe('lib/proof-api', () => {
         ).thenResolve($capacityResponse)
       })
 
-      it('returns the allowed occupancy of the building', async () => {
-        return proofApi
-          .fetchOccupancyInfo({
-            'location.province': 'Yukon',
-            'location.building': 'Yukon Weather Centre',
-            'request.date': '2020-07-10',
-          })
-          .then(response => expect(response).to.have.property('allowed', 19))
-      })
-
       it('returns the current occupancy of the building', () => {
         return proofApi
           .fetchOccupancyInfo({
@@ -215,7 +205,7 @@ describe('lib/proof-api', () => {
             'location.building': 'Yukon Weather Centre',
             'request.date': '2020-07-10',
           })
-          .then(response => expect(response).to.have.property('current', 8))
+          .then(response => expect(response).to.eq(8))
       })
     })
   })
