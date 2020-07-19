@@ -221,6 +221,15 @@ describe('lib/proof-api', () => {
       )
     )
 
+    /*
+      Generate some dates
+      dates = new Array(25)
+      for (var i = 0; i < dates.length; i++) {
+        dates[i] = moment('2020-07-10')
+          .add(i, 'days')
+          .format('YYYY-MM-DD')
+      }
+    */
     context('when looking for the next available date', () => {
       beforeEach(() => {
         td.when(
@@ -230,6 +239,22 @@ describe('lib/proof-api', () => {
             'request.date': '2020-07-10',
           })
         ).thenResolve($capacityResponse)
+        ;[
+          '2020-07-11',
+          '2020-07-12',
+          '2020-07-13',
+          '2020-07-14',
+          '2020-07-15',
+          '2020-07-16',
+        ].forEach(date => {
+          td.when(
+            $fetchCurrentSubmissionDataMock({
+              'location.province': 'Yukon',
+              'location.building': 'Yukon Weather Centre',
+              'request.date': date,
+            })
+          ).thenResolve([])
+        })
       })
 
       it('returns an array', async () => {
@@ -239,7 +264,43 @@ describe('lib/proof-api', () => {
             'location.building': 'Yukon Weather Centre',
             'request.date': '2020-07-10',
           })
-          .then(response => expect(response).be.an('array'))
+          .then(availableDays => expect(availableDays).to.be.an('array'))
+      })
+
+      it('return the correct number of available days', () => {
+        return proofApi
+          .nextAvailableDays(
+            {
+              'location.province': 'Yukon',
+              'location.building': 'Yukon Weather Centre',
+              'request.date': '2020-07-10',
+            },
+            { nDays: 3 }
+          )
+          .then(availableDays => expect(availableDays).to.have.lengthOf(3))
+      })
+
+      it('only makes calls corresponding to the lesser of nDays and maxRequests', () => {
+        return proofApi
+          .nextAvailableDays(
+            {
+              'location.province': 'Yukon',
+              'location.building': 'Yukon Weather Centre',
+              'request.date': '2020-07-11',
+            },
+            { nDays: 8, maxRequests: 4 }
+          )
+          .then(availableDays => expect(availableDays).to.have.lengthOf(4))
+      })
+
+      it('does not return a day if that day is unavailable', () => {
+        return proofApi
+          .nextAvailableDays({
+            'location.province': 'Yukon',
+            'location.building': 'Yukon Weather Centre',
+            'request.date': '2020-07-10',
+          })
+          .then(availableDays => expect(availableDays[0].value).not.to.eq('2020-07-10'))
       })
     })
   })
