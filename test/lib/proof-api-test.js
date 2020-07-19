@@ -163,6 +163,19 @@ describe('lib/proof-api', () => {
     })
   })
 
+  describe('#getBuildingCapacity', () => {
+    context('when passed a building and a province', () => {
+      it('returns the allowed occupancy of the building', () => {
+        expect(
+          proofApi.getBuildingCapacity({
+            province: 'Yukon',
+            building: 'Yukon Weather Centre',
+          })
+        ).to.eq(19)
+      })
+    })
+  })
+
   describe('#fetchOccupancyInfo', () => {
     context('when passed a province and building', () => {
       def('fetchCurrentSubmissionDataMock', () =>
