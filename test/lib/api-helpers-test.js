@@ -53,7 +53,7 @@ describe('lib/api-helpers', () => {
       () =>
         `${$PROOF_URL}/api/forms/1/submissions?` +
         'filters[location.province]=Yukon&' +
-        'filters[location.building]=Combined Services Bldg&' +
+        'filters[location.building]=Combined%20Services%20Bldg&' +
         'filters[request.date]=2020-07-09'
     )
 
@@ -80,6 +80,36 @@ describe('lib/api-helpers', () => {
             'request.date': '2020-07-09',
           })
           .then(response => expect(response).to.deep.eq($proofApiResponse.data))
+      })
+    })
+  })
+
+  describe('#buildEncodedFilters', () => {
+    context('when passed utf-8 data', () => {
+      it('builds the correct filters', () => {
+        expect(
+          helpers.buildEncodedFilters({
+            'location.province': 'Yukon',
+            'location.building': 'Combined Services Bldg',
+            'request.date': '2020-07-09',
+          })
+        ).to.eq(
+          'filters[location.province]=Yukon&filters[location.building]=Combined%20Services%20Bldg&filters[request.date]=2020-07-09'
+        )
+      })
+    })
+
+    context('when passed non-utf-8 characters', () => {
+      it('builds the correct filters', () => {
+        expect(
+          helpers.buildEncodedFilters({
+            'location.province': 'Québec',
+            'location.building': 'Biosphère',
+            'request.date': '2020-07-09',
+          })
+        ).to.eq(
+          'filters[location.province]=Qu%C3%A9bec&filters[location.building]=Biosph%C3%A8re&filters[request.date]=2020-07-09'
+        )
       })
     })
   })

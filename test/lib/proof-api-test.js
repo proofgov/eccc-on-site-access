@@ -52,7 +52,7 @@ describe('lib/proof-api', () => {
           () =>
             `${$PROOF_URL}/api/forms/1/submissions?` +
             'filters[location.province]=Yukon&' +
-            'filters[location.building]=Combined Services Bldg&' +
+            'filters[location.building]=Combined%20Services%20Bldg&' +
             'filters[request.date]=2020-07-09'
         )
 
