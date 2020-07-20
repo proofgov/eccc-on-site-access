@@ -71,6 +71,7 @@ class AvailabilityController {
   static async getBuildingCapacity (request, response) {
     let buildingCapacity = null
     let errorMessage = null
+    let allowedOccupancy = null
     try {
       const params = apiHelpers.requireParams(request.query, [
         'location.province',
@@ -78,6 +79,7 @@ class AvailabilityController {
       ])
       const { 'location.province': province, 'location.building': building } = params
       buildingCapacity = proofApi.getBuildingCapacity({ province, building })
+      allowedOccupancy = Math.ceil(buildingCapacity * 0.2)
     } catch (error) {
       logger.error(error.message)
       errorMessage = error.message
@@ -85,6 +87,7 @@ class AvailabilityController {
 
     response.json({
       buildingCapacity,
+      allowedOccupancy,
       error: errorMessage,
     })
   }

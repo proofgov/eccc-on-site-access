@@ -171,6 +171,7 @@ describe('controllers/availability-controller', () => {
               )
               .then(response =>
                 expect(response.body).to.deep.eq({
+                  allowedOccupancy: 4,
                   buildingCapacity: 19,
                   error: null,
                 })
@@ -202,7 +203,7 @@ describe('controllers/availability-controller', () => {
             ).thenThrow(new Error('Building lookup failure ...'))
           })
 
-          it.only('returns a readable error message', () => {
+          it('returns a readable error message', () => {
             return request(app)
               .get(
                 '/building-capacity?' +
@@ -211,6 +212,7 @@ describe('controllers/availability-controller', () => {
               )
               .then(response =>
                 expect(response.body).to.deep.eq({
+                  allowedOccupancy: null,
                   buildingCapacity: null,
                   error: 'Building lookup failure ...',
                 })
