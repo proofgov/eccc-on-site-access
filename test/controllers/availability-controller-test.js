@@ -86,35 +86,31 @@ describe('controllers/availability-controller', () => {
           })
         })
 
-        context('when api calls fail', () => {
-          context('when parameters missing', () => {
-            beforeEach(() => {
-              td.when(
-                $getBuildingCapacityMock({ province: undefined, building: undefined })
-              ).thenThrow(new Error('Missing required params ...'))
-            })
-
-            it('returns a human readable response', () => {
-              return request(app)
-                .get('/available-days')
-                .then(response =>
-                  expect(response.body).to.deep.eq({
-                    availableDays: [
-                      {
-                        label:
-                          'External API failure please report to the relevant authorities.',
-                        value: moment().format('YYYY-MM-DD'),
-                      },
-                    ],
-                    buildingCapacity: null,
-                    error: 'Missing required params ...',
-                    info:
-                      'Access is denied if building capacity would be over 20% on a given day.',
-                  })
-                )
-            })
+        context('when missing required parameters', () => {
+          it('returns a human readable error response', async () => {
+            return request(app)
+              .get('/available-days')
+              .then(response =>
+                expect(response.body.error).to.match(/^Missing required params/)
+              )
           })
 
+          it('returns a stock availability message', async () => {
+            return request(app)
+              .get('/available-days')
+              .then(response =>
+                expect(response.body.availableDays).to.deep.eq([
+                  {
+                    label:
+                      'External API failure please report to the relevant authorities.',
+                    value: moment().format('YYYY-MM-DD'),
+                  },
+                ])
+              )
+          })
+        })
+
+        context('when api calls fail', () => {
           context('availability lookup fails', () => {
             beforeEach(() => {
               td.when(
@@ -131,6 +127,7 @@ describe('controllers/availability-controller', () => {
                 })
               ).thenThrow(new Error('Service unavailable ...'))
             })
+
             it('returns the an error message and the current date', async () => {
               return request(app)
                 .get(

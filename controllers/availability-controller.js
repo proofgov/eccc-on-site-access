@@ -1,6 +1,7 @@
 const moment = require('moment')
 
 const proofApi = require(APP_ROOT + '/lib/proof-api')
+const apiHelpers = require(APP_ROOT + '/lib/api-helpers')
 
 class AvailabilityController {
   static async getAvailability (request, response) {
@@ -39,9 +40,16 @@ class AvailabilityController {
     ]
     let errorMessage = null
     try {
-      const { 'location.province': province, 'location.building': building } = request.query
+      const params = apiHelpers.requireParams(request.query, [
+        'location.province',
+        'location.building',
+        'request.date',
+      ])
+
+      const { 'location.province': province, 'location.building': building } = params
       buildingCapacity = proofApi.getBuildingCapacity({ province, building })
-      availableDays = await proofApi.nextAvailableDays({ ...request.query })
+
+      availableDays = await proofApi.nextAvailableDays({ ...params })
     } catch (error) {
       logger.error(error.message)
       errorMessage = error.message
