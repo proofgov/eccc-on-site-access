@@ -67,7 +67,7 @@ describe('controllers/availability-controller', () => {
               $nextAvailableDaysMock({
                 'location.province': 'Yukon',
                 'location.building': 'Yukon Weather Centre',
-                'request.date': '2020-07-10',
+                'request.date': moment().format('YYYY-MM-DD'),
               })
             ).thenResolve($apiResponse)
           })
@@ -77,8 +77,7 @@ describe('controllers/availability-controller', () => {
               .get(
                 '/available-days?' +
                   'location.province=Yukon&' +
-                  'location.building=Yukon Weather Centre&' +
-                  'request.date=2020-07-10'
+                  'location.building=Yukon Weather Centre'
               )
               .then(response =>
                 expect(response.body.availableDays).to.deep.eq($apiResponse)
@@ -123,7 +122,7 @@ describe('controllers/availability-controller', () => {
                 $nextAvailableDaysMock({
                   'location.province': 'Yukon',
                   'location.building': 'Yukon Weather Centre',
-                  'request.date': '2020-07-10',
+                  'request.date': moment().format('YYYY-MM-DD'),
                 })
               ).thenThrow(new Error('Service unavailable ...'))
             })
@@ -133,8 +132,7 @@ describe('controllers/availability-controller', () => {
                 .get(
                   '/available-days?' +
                     'location.province=Yukon&' +
-                    'location.building=Yukon Weather Centre&' +
-                    'request.date=2020-07-10'
+                    'location.building=Yukon Weather Centre'
                 )
                 .then(response =>
                   expect(response.body).to.deep.eq({

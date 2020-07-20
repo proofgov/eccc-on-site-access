@@ -31,11 +31,12 @@ class AvailabilityController {
   }
 
   static async getAvailabilityPerDay (request, response) {
+    const formattedCurrentDate = moment().format('YYYY-MM-DD')
     let buildingCapacity = null
     let availableDays = [
       {
         label: 'External API failure please report to the relevant authorities.',
-        value: moment().format('YYYY-MM-DD'),
+        value: formattedCurrentDate,
       },
     ]
     let errorMessage = null
@@ -43,13 +44,15 @@ class AvailabilityController {
       const params = apiHelpers.requireParams(request.query, [
         'location.province',
         'location.building',
-        'request.date',
       ])
 
       const { 'location.province': province, 'location.building': building } = params
       buildingCapacity = proofApi.getBuildingCapacity({ province, building })
 
-      availableDays = await proofApi.nextAvailableDays({ ...params })
+      availableDays = await proofApi.nextAvailableDays({
+        ...params,
+        'request.date': formattedCurrentDate,
+      })
     } catch (error) {
       logger.error(error.message)
       errorMessage = error.message
