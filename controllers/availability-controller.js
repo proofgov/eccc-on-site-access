@@ -67,6 +67,27 @@ class AvailabilityController {
       error: errorMessage,
     })
   }
+
+  static async getBuildingCapacity (request, response) {
+    let buildingCapacity = null
+    let errorMessage = null
+    try {
+      const params = apiHelpers.requireParams(request.query, [
+        'location.province',
+        'location.building',
+      ])
+      const { 'location.province': province, 'location.building': building } = params
+      buildingCapacity = proofApi.getBuildingCapacity({ province, building })
+    } catch (error) {
+      logger.error(error.message)
+      errorMessage = error.message
+    }
+
+    response.json({
+      buildingCapacity,
+      error: errorMessage,
+    })
+  }
 }
 
 module.exports = AvailabilityController

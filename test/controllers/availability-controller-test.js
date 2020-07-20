@@ -155,4 +155,69 @@ describe('controllers/availability-controller', () => {
       })
     })
   })
+
+  describe('#getBuildingCapacity', () => {
+    context('GET /building-capacity', () => {
+      def('getBuildingCapacityMock', () => td.replace(proofApi, 'getBuildingCapacity'))
+
+      context('when requesting building capacity information', () => {
+        context('when successfull', () => {
+          it('returns the correct data', () => {
+            return request(app)
+              .get(
+                '/building-capacity?' +
+                  'location.province=Yukon&' +
+                  'location.building=Yukon Weather Centre'
+              )
+              .then(response =>
+                expect(response.body).to.deep.eq({
+                  buildingCapacity: 19,
+                  error: null,
+                })
+              )
+          })
+        })
+
+        context('when argument is incorrect', () => {
+          it('returns a readable error message', () => {
+            return request(app)
+              .get(
+                '/building-capacity?' +
+                  'location.province=Yukon&' +
+                  'location.bad-argument=Yukon Weather Centre'
+              )
+              .then(response =>
+                expect(response.body.error).to.match(/^Missing required params or values/)
+              )
+          })
+        })
+
+        context('when api lookup fails', () => {
+          beforeEach(() => {
+            td.when(
+              $getBuildingCapacityMock({
+                province: 'Yukon',
+                building: 'Not a real building',
+              })
+            ).thenThrow(new Error('Building lookup failure ...'))
+          })
+
+          it.only('returns a readable error message', () => {
+            return request(app)
+              .get(
+                '/building-capacity?' +
+                  'location.province=Yukon&' +
+                  'location.building=Not a real building'
+              )
+              .then(response =>
+                expect(response.body).to.deep.eq({
+                  buildingCapacity: null,
+                  error: 'Building lookup failure ...',
+                })
+              )
+          })
+        })
+      })
+    })
+  })
 })

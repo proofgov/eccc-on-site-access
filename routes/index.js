@@ -7,6 +7,7 @@ const routes = Router()
 // building name, floor, request date and request time as parameters.
 routes.get('/available-time-slots', TimeSlotsController.getTimeSlots)
 routes.get('/available-days', AvailabilityController.getAvailabilityPerDay)
+routes.get('/building-capacity', AvailabilityController.getBuildingCapacity)
 routes.get('/is-time-available', AvailabilityController.getAvailability)
 
 const allRoutePaths = routes.stack
