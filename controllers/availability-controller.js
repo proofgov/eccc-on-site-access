@@ -41,7 +41,12 @@ class AvailabilityController {
     ]
     let errorMessage = null
     try {
-      const params = apiHelpers.requireParams(request.query, [
+      const allowedParams = apiHelpers.permitAllowedParams(request.query, [
+        'location.province',
+        'location.building',
+        'request.date',
+      ])
+      const params = apiHelpers.requireParams(allowedParams, [
         'location.province',
         'location.building',
       ])
@@ -51,7 +56,7 @@ class AvailabilityController {
 
       availableDays = await proofApi.nextAvailableDays({
         ...params,
-        'request.date': formattedCurrentDate,
+        'request.date': allowedParams['request.date'] || formattedCurrentDate,
       })
     } catch (error) {
       logger.error(error.message)

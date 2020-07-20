@@ -62,26 +62,53 @@ describe('controllers/availability-controller', () => {
             },
           ])
 
-          beforeEach(() => {
-            td.when(
-              $nextAvailableDaysMock({
-                'location.province': 'Yukon',
-                'location.building': 'Yukon Weather Centre',
-                'request.date': moment().format('YYYY-MM-DD'),
-              })
-            ).thenResolve($apiResponse)
+          context('when no date provided in the url', () => {
+            beforeEach(() => {
+              td.when(
+                $nextAvailableDaysMock({
+                  'location.province': 'Yukon',
+                  'location.building': 'Yukon Weather Centre',
+                  'request.date': moment().format('YYYY-MM-DD'),
+                })
+              ).thenResolve($apiResponse)
+            })
+
+            it('returns the next available dates', async () => {
+              return request(app)
+                .get(
+                  '/available-days?' +
+                    'location.province=Yukon&' +
+                    'location.building=Yukon Weather Centre'
+                )
+                .then(response =>
+                  expect(response.body.availableDays).to.deep.eq($apiResponse)
+                )
+            })
           })
 
-          it('returns the next available dates', async () => {
-            return request(app)
-              .get(
-                '/available-days?' +
-                  'location.province=Yukon&' +
-                  'location.building=Yukon Weather Centre'
-              )
-              .then(response =>
-                expect(response.body.availableDays).to.deep.eq($apiResponse)
-              )
+          context('when date provided in url', () => {
+            beforeEach(() => {
+              td.when(
+                $nextAvailableDaysMock({
+                  'location.province': 'Yukon',
+                  'location.building': 'Yukon Weather Centre',
+                  'request.date': '2020-07-10',
+                })
+              ).thenResolve($apiResponse)
+            })
+
+            it('returns the next available dates', async () => {
+              return request(app)
+                .get(
+                  '/available-days?' +
+                    'location.province=Yukon&' +
+                    'location.building=Yukon Weather Centre&' +
+                    'request.date=2020-07-10'
+                )
+                .then(response =>
+                  expect(response.body.availableDays).to.deep.eq($apiResponse)
+                )
+            })
           })
         })
 
