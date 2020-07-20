@@ -57,8 +57,8 @@ describe('controllers/availability-controller', () => {
         context('when api call succceds', () => {
           def('apiResponse', () => [
             {
-              label: '13 (out of 55) appointments available on 2020/07/16',
-              value: '2020/07/16',
+              label: '13 (out of 55) appointments available on 2020-07-16',
+              value: '2020-07-16',
             },
           ])
 

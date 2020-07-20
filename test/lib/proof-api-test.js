@@ -53,7 +53,7 @@ describe('lib/proof-api', () => {
             `${$PROOF_URL}/api/forms/1/submissions?` +
             'filters[location.province]=Yukon&' +
             'filters[location.building]=Combined Services Bldg&' +
-            'filters[request.date]=2020/07/09'
+            'filters[request.date]=2020-07-09'
         )
 
         it('returns true', async () => {
@@ -61,7 +61,7 @@ describe('lib/proof-api', () => {
             await proofApi.checkAvailability({
               'location.province': 'Yukon',
               'location.building': 'Combined Services Bldg',
-              'request.date': '2020/07/09',
+              'request.date': '2020-07-09',
               'request.time': '4',
             })
           ).to.be.true

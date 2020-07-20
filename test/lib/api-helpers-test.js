@@ -54,7 +54,7 @@ describe('lib/api-helpers', () => {
         `${$PROOF_URL}/api/forms/1/submissions?` +
         'filters[location.province]=Yukon&' +
         'filters[location.building]=Combined Services Bldg&' +
-        'filters[request.date]=2020/07/09'
+        'filters[request.date]=2020-07-09'
     )
 
     beforeEach(() => {
@@ -77,7 +77,7 @@ describe('lib/api-helpers', () => {
           .fetchCurrentSubmissionData({
             'location.province': 'Yukon',
             'location.building': 'Combined Services Bldg',
-            'request.date': '2020/07/09',
+            'request.date': '2020-07-09',
           })
           .then(response => expect(response).to.deep.eq($proofApiResponse.data))
       })
