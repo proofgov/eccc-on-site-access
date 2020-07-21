@@ -17,4 +17,4 @@ services:
 networks:
   default:
     external:
-      name: deploy-proof-yg-snapshot_default
+      name: ProofNet
