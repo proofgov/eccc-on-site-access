@@ -15,7 +15,6 @@
   "private": true,
   "dependencies": {
     "axios": "^0.19.2",
-    "cors": "^2.8.5",
     "docopt": "^0.6.2",
     "express": "^4.17.1",
     "express-basic-auth": "^1.2.0",

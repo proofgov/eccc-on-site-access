@@ -5,7 +5,6 @@ const url = require('url')
 
 const express = require('express')
 const morgan = require('morgan')
-const cors = require('cors')
 
 global.APP_ROOT = Object.freeze(path.dirname(__filename))
 global.logger = require(APP_ROOT + '/utils/logger')
@@ -28,7 +27,14 @@ app.use(
     },
   })
 )
-app.use(cors())
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  )
+  next()
+})
 app.use(routes)
 
 // const httpsServer = https.createServer(credentials, app);
