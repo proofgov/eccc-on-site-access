@@ -12,6 +12,8 @@ services:
       NODE_ENV: development
     ports:
       - '4000:4000'
+    # lets you test aganst a local verions of PROOF core-app.
+    # network_mode: host
     volumes:
       - .:/usr/src/app
   test:
