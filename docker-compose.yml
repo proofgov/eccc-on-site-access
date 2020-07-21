@@ -7,16 +7,14 @@ services:
     build: .
     environment:
       NODE_ENV: production
-    ports:
-      - '4000:4000'
-#     labels:
-#       - 'traefik.enable=true'
-#       - 'traefik.http.routers.app.rule=Host(`proofgov.com`)'
-#       - 'traefik.http.routers.app.tls=true'
-#       - 'traefik.frontend.rule=PathPrefixStrip:/traefik;Host:eccc-on-site-access.proofgov.com'
-#       - 'traefik.port=4000'
+    # ports:
+    #   - '4000:4000'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.frontend.rule=Host:eccc-on-site-access.proofgov.com'
+      - 'traefik.port=4000'
 
-# networks:
-#   default:
-#     external:
-#       name: deploy-proof-yg-snapshot_default
+networks:
+  default:
+    external:
+      name: deploy-proof-yg-snapshot_default
