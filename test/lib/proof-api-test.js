@@ -151,10 +151,6 @@ describe('lib/proof-api', () => {
 
   describe('#fetchOccupancyInfo', () => {
     context('when passed a province and building and date', () => {
-      def('fetchCurrentSubmissionDataMock', () =>
-        td.replace(helpers, 'fetchCurrentSubmissionData')
-      )
-
       def('capacityResponse', () =>
         JSON.parse(
           fs.readFileSync(path.resolve(APP_ROOT, 'dummy/capacity-data.json'), 'utf8')
@@ -198,6 +194,7 @@ describe('lib/proof-api', () => {
       )
     )
 
+    def('yukonWeatherCenterCapacity', () => 19)
     /*
       Generate some dates
       dates = new Array(25)
@@ -210,11 +207,14 @@ describe('lib/proof-api', () => {
     context('when looking for the next available date', () => {
       beforeEach(() => {
         td.when(
-          $fetchCurrentSubmissionDataMock({
-            'location.province': 'Yukon',
-            'location.building': 'Yukon Weather Centre',
-            'request.date': '2020-07-10',
-          })
+          $fetchCurrentSubmissionDataMock(
+            {
+              'location.province': 'Yukon',
+              'location.building': 'Yukon Weather Centre',
+              'request.date': '2020-07-10',
+            },
+            { perPage: $yukonWeatherCenterCapacity }
+          )
         ).thenResolve($capacityResponse)
         ;[
           '2020-07-11',
@@ -225,11 +225,14 @@ describe('lib/proof-api', () => {
           '2020-07-16',
         ].forEach(date => {
           td.when(
-            $fetchCurrentSubmissionDataMock({
-              'location.province': 'Yukon',
-              'location.building': 'Yukon Weather Centre',
-              'request.date': date,
-            })
+            $fetchCurrentSubmissionDataMock(
+              {
+                'location.province': 'Yukon',
+                'location.building': 'Yukon Weather Centre',
+                'request.date': date,
+              },
+              { perPage: $yukonWeatherCenterCapacity }
+            )
           ).thenResolve([])
         })
       })
