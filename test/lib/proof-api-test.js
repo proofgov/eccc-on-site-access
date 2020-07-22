@@ -7,7 +7,6 @@ const proofApi = require(APP_ROOT + '/lib/proof-api')
 const helpers = require(APP_ROOT + '/lib/api-helpers')
 
 describe('lib/proof-api', () => {
-  def('getMock', () => td.replace(axios, 'get'))
   def('fetchCurrentSubmissionDataMock', () =>
     td.replace(helpers, 'fetchCurrentSubmissionData')
   )
@@ -105,21 +104,26 @@ describe('lib/proof-api', () => {
   describe('#nextAvailableTimeSlot', () => {
     context('when looking for the next available time slot', () => {
       context('when next available day is the next day', () => {
-        def('proofApiTimeSlotAvailableResponse', () =>
+        def('capacityResponse', () =>
           JSON.parse(
-            fs.readFileSync(
-              path.resolve(APP_ROOT, 'dummy/proof_sumbissions_response.json'),
-              'utf8'
-            )
+            fs.readFileSync(path.resolve(APP_ROOT, 'dummy/capacity-data.json'), 'utf8')
           )
         )
 
+        def('currentDate', () => '2020-07-10')
+        def('nextDay', () => '2020-07-11')
+
         beforeEach(() => {
           td.when(
-            $getMock(td.matchers.contains('2020-07-11'), td.matchers.anything())
-          ).thenResolve({
-            data: $proofApiTimeSlotAvailableResponse,
-          })
+            $fetchCurrentSubmissionDataMock(
+              {
+                'location.province': 'Yukon',
+                'location.building': 'Yukon Weather Centre',
+                'request.date': $nextDay,
+              },
+              td.matchers.anything()
+            )
+          ).thenResolve($capacityResponse)
         })
 
         it('returns the next day', async () => {
@@ -127,10 +131,10 @@ describe('lib/proof-api', () => {
             await proofApi.nextAvailableTimeSlot({
               'location.province': 'Yukon',
               'location.building': 'Yukon Weather Centre',
-              'request.date': '2020-07-10',
+              'request.date': $currentDate,
               'request.time': '4',
             })
-          ).to.eq('2020-07-11')
+          ).to.eq($nextDay)
         })
       })
     })
@@ -153,7 +157,7 @@ describe('lib/proof-api', () => {
     context('when passed a province and building and date', () => {
       def('capacityResponse', () =>
         JSON.parse(
-          fs.readFileSync(path.resolve(APP_ROOT, 'dummy/capacity-data.json'), 'utf8')
+          fs.readFileSync(path.resolve(APP_ROOT, 'dummy/over-capacity-data.json'), 'utf8')
         )
       )
       def('yukonWeatherCenterCapacity', () => 19)
@@ -190,7 +194,7 @@ describe('lib/proof-api', () => {
 
     def('capacityResponse', () =>
       JSON.parse(
-        fs.readFileSync(path.resolve(APP_ROOT, 'dummy/capacity-data.json'), 'utf8')
+        fs.readFileSync(path.resolve(APP_ROOT, 'dummy/over-capacity-data.json'), 'utf8')
       )
     )
 
