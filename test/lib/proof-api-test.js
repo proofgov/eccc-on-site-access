@@ -13,7 +13,6 @@ describe('lib/proof-api', () => {
 
   describe('#checkAvailability', () => {
     def('building', () => 'Combined Services Bldg')
-    def('perPage', () => 25)
     def('date', () => '2020-07-09')
     def('capacityResponse', () => [])
 
@@ -25,7 +24,7 @@ describe('lib/proof-api', () => {
             'location.building': $building,
             'request.date': $date,
           },
-          { perPage: $perPage }
+          td.matchers.anything()
         )
       ).thenResolve($capacityResponse)
     })
@@ -52,8 +51,6 @@ describe('lib/proof-api', () => {
         )
         def('building', () => 'Yukon Weather Centre')
         def('date', () => '2020-07-10')
-
-        def('perPage', () => 19)
 
         it('returns false', async () => {
           expect(
@@ -198,16 +195,6 @@ describe('lib/proof-api', () => {
       )
     )
 
-    def('yukonWeatherCenterCapacity', () => 19)
-    /*
-      Generate some dates
-      dates = new Array(25)
-      for (var i = 0; i < dates.length; i++) {
-        dates[i] = moment('2020-07-10')
-          .add(i, 'days')
-          .format('YYYY-MM-DD')
-      }
-    */
     context('when looking for the next available date', () => {
       beforeEach(() => {
         td.when(
@@ -217,9 +204,18 @@ describe('lib/proof-api', () => {
               'location.building': 'Yukon Weather Centre',
               'request.date': '2020-07-10',
             },
-            { perPage: $yukonWeatherCenterCapacity }
+            td.matchers.anything()
           )
         ).thenResolve($capacityResponse)
+        /*
+          Generate some dates
+          dates = new Array(25)
+          for (var i = 0; i < dates.length; i++) {
+            dates[i] = moment('2020-07-10')
+              .add(i, 'days')
+              .format('YYYY-MM-DD')
+          }
+        */
         ;[
           '2020-07-11',
           '2020-07-12',
@@ -235,7 +231,7 @@ describe('lib/proof-api', () => {
                 'location.building': 'Yukon Weather Centre',
                 'request.date': date,
               },
-              { perPage: $yukonWeatherCenterCapacity }
+              td.matchers.anything()
             )
           ).thenResolve([])
         })
