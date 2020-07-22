@@ -8,60 +8,37 @@ const helpers = require(APP_ROOT + '/lib/api-helpers')
 
 describe('lib/proof-api', () => {
   def('getMock', () => td.replace(axios, 'get'))
+  def('fetchCurrentSubmissionDataMock', () =>
+    td.replace(helpers, 'fetchCurrentSubmissionData')
+  )
 
   describe('#checkAvailability', () => {
-    def('proofApiResponse', () =>
-      JSON.parse(
-        fs.readFileSync(
-          path.resolve(APP_ROOT, 'dummy/proof_sumbissions_response.json'),
-          'utf8'
-        )
-      )
-    )
-
-    def('queryOptions', () => ({
-      headers: {
-        Authorization: `Bearer ${$PROOF_API_TOKEN}`,
-      },
-    }))
-
-    def('PROOF_URL', () => 'http://localhost:3000')
-    def(
-      'PROOF_API_TOKEN',
-      () => 'b133f59e0cb56932a6c7ea0a239dbbcbf5ec7020f5e5851bfe2c88469d56b0f4'
-    )
+    def('building', () => 'Combined Services Bldg')
+    def('perPage', () => 25)
+    def('date', () => '2020-07-09')
+    def('capacityResponse', () => [])
 
     beforeEach(() => {
-      process.env['FORM_CONFIG_ID'] = 1
-      process.env['PROOF_URL'] = $PROOF_URL
-      process.env['PROOF_API_TOKEN'] = $PROOF_API_TOKEN
-
-      td.when($getMock($queryUrl, $queryOptions)).thenResolve({ data: $proofApiResponse })
-    })
-
-    afterEach(() => {
-      delete process.env['FORM_CONFIG_ID']
-      delete process.env['PROOF_URL']
-      delete process.env['PROOF_API_TOKEN']
+      td.when(
+        $fetchCurrentSubmissionDataMock(
+          {
+            'location.province': 'Yukon',
+            'location.building': $building,
+            'request.date': $date,
+          },
+          { perPage: $perPage }
+        )
+      ).thenResolve($capacityResponse)
     })
 
     context('when passed a building name and date', () => {
       context('when building is less than 20% occupancy for that day', () => {
-        def(
-          'queryUrl',
-          () =>
-            `${$PROOF_URL}/api/forms/1/submissions?` +
-            'filters[location.province]=Yukon&' +
-            'filters[location.building]=Combined%20Services%20Bldg&' +
-            'filters[request.date]=2020-07-09'
-        )
-
         it('returns true', async () => {
           expect(
             await proofApi.checkAvailability({
               'location.province': 'Yukon',
-              'location.building': 'Combined Services Bldg',
-              'request.date': '2020-07-09',
+              'location.building': $building,
+              'request.date': $date,
               'request.time': '4',
             })
           ).to.be.true
@@ -69,27 +46,22 @@ describe('lib/proof-api', () => {
       })
 
       context('when building is more than 20% occupancy for that day', () => {
-        def('proofApiResponse', () =>
+        def('capacityResponse', () =>
           JSON.parse(
-            fs.readFileSync(
-              path.resolve(APP_ROOT, 'dummy/proof_sumbissions_over_capacity_response.json'),
-              'utf8'
-            )
+            fs.readFileSync(path.resolve(APP_ROOT, 'dummy/over-capacity-data.json'), 'utf8')
           )
         )
+        def('building', () => 'Yukon Weather Centre')
+        def('date', () => '2020-07-10')
 
-        beforeEach(() => {
-          td.when($getMock(), { ignoreExtraArgs: true }).thenResolve({
-            data: $proofApiResponse,
-          })
-        })
+        def('perPage', () => 19)
 
         it('returns false', async () => {
           expect(
             await proofApi.checkAvailability({
               'location.province': 'Yukon',
-              'location.building': 'Yukon Weather Centre',
-              'request.date': '2020-07-10',
+              'location.building': $building,
+              'request.date': $date,
               'request.time': '4',
             })
           ).to.be.false
@@ -110,7 +82,7 @@ describe('lib/proof-api', () => {
 
     context('when proof server is down', () => {
       beforeEach(() => {
-        td.when($getMock(), { ignoreExtraArgs: true }).thenThrow(
+        td.when($fetchCurrentSubmissionDataMock(), { ignoreExtraArgs: true }).thenThrow(
           new Error('PROOF api failure')
         )
       })
@@ -120,6 +92,7 @@ describe('lib/proof-api', () => {
           .checkAvailability({
             'location.province': 'Yukon',
             'location.building': 'Combined Services Bldg',
+            'request.date': '2020-10-27',
           })
           .then(() => expect.fail())
           .catch(error => {
@@ -187,7 +160,7 @@ describe('lib/proof-api', () => {
           fs.readFileSync(path.resolve(APP_ROOT, 'dummy/capacity-data.json'), 'utf8')
         )
       )
-      def('perPage', () => 9999)
+      def('yukonWeatherCenterCapacity', () => 19)
 
       beforeEach(() => {
         td.when(
@@ -197,21 +170,18 @@ describe('lib/proof-api', () => {
               'location.building': 'Yukon Weather Centre',
               'request.date': '2020-07-10',
             },
-            { perPage: $perPage }
+            { perPage: $yukonWeatherCenterCapacity }
           )
         ).thenResolve($capacityResponse)
       })
 
       it('returns the current occupancy of the building', () => {
         return proofApi
-          .fetchOccupancyInfo(
-            {
-              'location.province': 'Yukon',
-              'location.building': 'Yukon Weather Centre',
-              'request.date': '2020-07-10',
-            },
-            { perPage: $perPage }
-          )
+          .fetchOccupancyInfo({
+            'location.province': 'Yukon',
+            'location.building': 'Yukon Weather Centre',
+            'request.date': '2020-07-10',
+          })
           .then(response => expect(response).to.eq(8))
       })
     })
