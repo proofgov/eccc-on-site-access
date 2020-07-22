@@ -52,9 +52,12 @@ describe('lib/api-helpers', () => {
       'queryUrl',
       () =>
         `${$PROOF_URL}/api/forms/1/submissions?` +
-        'filters[location.province]=Yukon&' +
-        'filters[location.building]=Combined%20Services%20Bldg&' +
-        'filters[request.date]=2020-07-09&' +
+        'filters[location.province][value]=Yukon&' +
+        'filters[location.province][query]=EQ&' +
+        'filters[location.building][value]=Combined%20Services%20Bldg&' +
+        'filters[location.building][query]=EQ&' +
+        'filters[request.date][value]=2020-07-09&' +
+        'filters[request.date][query]=EQ&' +
         `per_page=${$perPage}`
     )
     def('perPage', () => 999)
@@ -99,7 +102,12 @@ describe('lib/api-helpers', () => {
             'request.date': '2020-07-09',
           })
         ).to.eq(
-          'filters[location.province]=Yukon&filters[location.building]=Combined%20Services%20Bldg&filters[request.date]=2020-07-09'
+          'filters[location.province][value]=Yukon&' +
+            'filters[location.province][query]=EQ&' +
+            'filters[location.building][value]=Combined%20Services%20Bldg&' +
+            'filters[location.building][query]=EQ&' +
+            'filters[request.date][value]=2020-07-09&' +
+            'filters[request.date][query]=EQ'
         )
       })
     })
@@ -113,7 +121,12 @@ describe('lib/api-helpers', () => {
             'request.date': '2020-07-09',
           })
         ).to.eq(
-          'filters[location.province]=Qu%C3%A9bec&filters[location.building]=Biosph%C3%A8re&filters[request.date]=2020-07-09'
+          'filters[location.province][value]=Qu%C3%A9bec&' +
+            'filters[location.province][query]=EQ&' +
+            'filters[location.building][value]=Biosph%C3%A8re&' +
+            'filters[location.building][query]=EQ&' +
+            'filters[request.date][value]=2020-07-09&' +
+            'filters[request.date][query]=EQ'
         )
       })
     })
