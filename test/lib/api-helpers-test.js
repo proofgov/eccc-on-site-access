@@ -54,8 +54,10 @@ describe('lib/api-helpers', () => {
         `${$PROOF_URL}/api/forms/1/submissions?` +
         'filters[location.province]=Yukon&' +
         'filters[location.building]=Combined%20Services%20Bldg&' +
-        'filters[request.date]=2020-07-09'
+        'filters[request.date]=2020-07-09&' +
+        `per_page=${$perPage}`
     )
+    def('perPage', () => 999)
 
     beforeEach(() => {
       process.env['FORM_CONFIG_ID'] = 1
@@ -74,11 +76,14 @@ describe('lib/api-helpers', () => {
     context('when passed various args', () => {
       it('returns returns the appropriate response', async () => {
         return helpers
-          .fetchCurrentSubmissionData({
-            'location.province': 'Yukon',
-            'location.building': 'Combined Services Bldg',
-            'request.date': '2020-07-09',
-          })
+          .fetchCurrentSubmissionData(
+            {
+              'location.province': 'Yukon',
+              'location.building': 'Combined Services Bldg',
+              'request.date': '2020-07-09',
+            },
+            { perPage: $perPage }
+          )
           .then(response => expect(response).to.deep.eq($proofApiResponse.data))
       })
     })
