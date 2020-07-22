@@ -187,24 +187,31 @@ describe('lib/proof-api', () => {
           fs.readFileSync(path.resolve(APP_ROOT, 'dummy/capacity-data.json'), 'utf8')
         )
       )
+      def('perPage', () => 9999)
 
       beforeEach(() => {
         td.when(
-          $fetchCurrentSubmissionDataMock({
-            'location.province': 'Yukon',
-            'location.building': 'Yukon Weather Centre',
-            'request.date': '2020-07-10',
-          })
+          $fetchCurrentSubmissionDataMock(
+            {
+              'location.province': 'Yukon',
+              'location.building': 'Yukon Weather Centre',
+              'request.date': '2020-07-10',
+            },
+            { perPage: $perPage }
+          )
         ).thenResolve($capacityResponse)
       })
 
       it('returns the current occupancy of the building', () => {
         return proofApi
-          .fetchOccupancyInfo({
-            'location.province': 'Yukon',
-            'location.building': 'Yukon Weather Centre',
-            'request.date': '2020-07-10',
-          })
+          .fetchOccupancyInfo(
+            {
+              'location.province': 'Yukon',
+              'location.building': 'Yukon Weather Centre',
+              'request.date': '2020-07-10',
+            },
+            { perPage: $perPage }
+          )
           .then(response => expect(response).to.eq(8))
       })
     })
